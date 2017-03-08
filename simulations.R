@@ -16,5 +16,5 @@ X2 <- runif(sample_size, min = 4, max = 12)
 
 # 1.2. expectation of theta_pretest, given X1 and X2
 
-beta1 <- 1 #we fix it to be 1
-beta2 <- 
+varX1 <- var(X1)
+varX2 <- var(X2)
