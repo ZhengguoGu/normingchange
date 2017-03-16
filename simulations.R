@@ -30,10 +30,11 @@ GRM_sim <- function(ability, itempar){
 }
 
 ######################################################
-sample_size = 100000  #sample size = 100, 500, 1000, 1500, 2000, 3000, 5000
+sample_size = 1000000  #sample size = 100, 500, 1000, 1500, 2000, 3000, 5000
 
-propE <- .065 / 2  # proportion of explained by each predictor. .065/2, .13/2, and .26/2
-beta1 <- sqrt(4*propE/(1-propE)) # For X1, dichotomous
+propE <- .26 / 2  # proportion of explained by each predictor. .065/2, .13/2, and .26/2
+
+beta1 <- sqrt(4 * propE /(1 - propE))  # For X1, dichotomous
 beta2 <- sqrt(propE)             # For X2. continuous
 
 # 1. simulate person parameters
@@ -47,12 +48,13 @@ X2 <- runif(sample_size, min = 4, max = 12)
 
 # 1.2. expectation of theta_pretest, given X1 and X2
 
-theta <- beta1 * X1 + beta2 * scale(X2, center = T, scale = T) + rnorm(sample_size,0,sqrt(1 - 2 * propE))    #note that X2 has to be standardized so that beta2^2 is the proportion                                                                                                                       of variance explained. Also rnorm() is added so that the var of theta    
-
+theta_D <- beta1 * X1   + beta2 * scale(X2, center = T, scale = T)  + rnorm(sample_size, 0,  sqrt(1 - propE * 2))    #note that X2 has to be standardized so that beta2^2 is the proportion                                                                                                                       of variance explained. Also rnorm() is added so that the var of theta    
+theta_D2 <- beta1 * X1  + beta2 * scale(X2, center = T, scale = T) 
 # 1.3. extra: check whether our setup is correct
-cor(X1, theta) ^ 2
-cor(X2, theta) ^ 2
-fit <- lm(theta ~ X1 + X2)
+cor(X1, theta_D) ^ 2
+cor(X2, theta_D) ^ 2
+cor(theta_D, theta_D2) ^ 2
+fit <- lm(theta_D ~ X1 + X2)
 summary(fit)
 library(lmSupport)
 modelEffectSizes(fit)
