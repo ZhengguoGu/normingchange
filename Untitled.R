@@ -109,3 +109,66 @@ cor(g, th) ^ 2
 results <- lm(th ~ g  + x)
 summary(results)
 modelEffectSizes(results)
+
+
+######################  trial 3  CORRECT! 
+
+n <- 10000000
+x <- rnorm(n, 0, 1)
+g <- rbinom(n, size = 1, prob = .5)
+
+b1 <- sqrt(.1)
+b2 <- sqrt(.1/.25)
+
+th <- b1 * x + b2 * g + rnorm(n, 0, sqrt(.8))
+cor(x, th) ^ 2
+cor(g, th) ^ 2
+
+results <- lm(th ~ g  + x)
+summary(results)
+library(lmSupport)
+modelEffectSizes(results)
+
+#################### trial 3 extra  CORRECT!
+#var_th -> .2
+#var_z -> .2*.8, thus 80% of variance is from noise
+#var_x -> .2*.1, thus 10%
+#var_g -> .2*.1, thus 10%
+
+n <- 1000000
+x <- rnorm(n, 0, 1)
+g <- rbinom(n, size = 1, prob = .5)
+
+b1 <- sqrt(.02)
+b2 <- sqrt(.02/.25)
+
+th <- b1 * x + b2 * g + rnorm(n, 0, sqrt(.8*.2))
+cor(x, th) ^ 2
+cor(g, th) ^ 2
+
+results <- lm(th ~ g  + x)
+summary(results)
+library(lmSupport)
+modelEffectSizes(results)
+
+#################### trial 3 extra final  CORRECT!!!
+#var_th -> .2
+#var_z -> .2*.8, thus 80% of variance is from noise
+#var_x -> .2*.1, thus 10%
+#var_g -> .2*.1, thus 10%
+
+n <- 1000000
+x <- runif(n, min = 4, max = 12)
+g <- rbinom(n, size = 1, prob = .5)
+
+b1 <- sqrt(.02 / (1/12*(12-4)^2) )
+b2 <- sqrt(.02/.25)
+
+th <- b1 * x + b2 * g + rnorm(n, 0, sqrt(.8*.2))
+cor(x, th) ^ 2
+cor(g, th) ^ 2
+
+results <- lm(th ~ g  + x)
+summary(results)
+library(lmSupport)
+modelEffectSizes(results)
