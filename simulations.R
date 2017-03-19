@@ -4,7 +4,12 @@
 ###################################################
 
 
-#################################################################################
+sample_size = 10000000  #sample size = 100, 500, 1000, 1500, 2000, 3000, 5000
+propE <- .26 / 2  # proportion of explained by each predictor. 0, .065/2, .13/2, and .26/2
+polytomous <- TRUE  # if true, simulate polytomous response data 
+num_items <- 10 # 10, 20, and 40
+
+##################### Function for generating responses ##############################
 GRM_sim <- function(ability, itempar){
   
   # descrption:
@@ -29,32 +34,51 @@ GRM_sim <- function(ability, itempar){
   return(list(response, true_response))
 }
 
-######################################################
-sample_size = 1000000  #sample size = 100, 500, 1000, 1500, 2000, 3000, 5000
+####################### theta_D ###########################################
 
-propE <- .26 / 2  # proportion of explained by each predictor. .065/2, .13/2, and .26/2
-
-beta1 <- sqrt(4 * propE /(1 - propE))  # For X1, dichotomous
-beta2 <- sqrt(propE)             # For X2. continuous
+beta1 <- sqrt(propE * .14 / .25)  # For X1, dichotomous
+beta2 <- sqrt(propE * .14 * 12 / (12 - 4)^2)             # For X2. continuous, uniform
 
 # 1. simulate person parameters
 
 # 1.1. covariates X1 and X2
 set.seed(112)
 X1 <- rbinom(sample_size, size = 1, prob = .5)
-
-set.seed(112) 
 X2 <- runif(sample_size, min = 4, max = 12)
 
 # 1.2. expectation of theta_pretest, given X1 and X2
 
-theta_D <- beta1 * X1   + beta2 * scale(X2, center = T, scale = T)  + rnorm(sample_size, 0,  sqrt(1 - propE * 2))    #note that X2 has to be standardized so that beta2^2 is the proportion                                                                                                                       of variance explained. Also rnorm() is added so that the var of theta    
-theta_D2 <- beta1 * X1  + beta2 * scale(X2, center = T, scale = T) 
+theta_D <- beta1 * X1 + beta2 * X2 + rnorm(sample_size, .75, sqrt(.14 - 2 * propE * .14))
+var(theta_D)
 # 1.3. extra: check whether our setup is correct
 cor(X1, theta_D) ^ 2
 cor(X2, theta_D) ^ 2
-cor(theta_D, theta_D2) ^ 2
-fit <- lm(theta_D ~ X1 + X2)
-summary(fit)
-library(lmSupport)
-modelEffectSizes(fit)
+
+#fit <- lm(theta_D ~ X1 + X2)
+#summary(fit)
+#library(lmSupport)
+#modelEffectSizes(fit)
+
+###################### Simulate response data #######################
+theta_pre <- rnorm(sample_size, 0, 1)
+theta_post <- theta_pre + theta_D
+
+if(polytomous == TRUE){
+  
+  itempar <- matrix(NA,num_items,5)
+  itempar[,1] <- runif(num_items,1.5,2.5)   # discrimination
+  avg_beta <- runif(num_items, 0, 1.25)
+  itempar[,2] <- avg_beta - 1
+  itempar[,3] <- avg_beta - .5
+  itempar[,4] <- avg_beta + .5
+  itempar[,5] <- avg_beta + 1
+  
+} else{
+  
+  itempar <- matrix(NA,num_items,2)
+  itempar[,1] <- runif(num_items,1.5,2.5)   # discrimination
+  itempar[,2] <- runif(num_items, 0, 1.25)
+}
+
+
+
