@@ -23,12 +23,22 @@ GRM_sim <- function(ability, itempar){
     
     
     for(i in 1:n_sub){
+      if(dim(itempar)[2] > 2){
+        
+        numeritor <- exp(sweep((ability[i]-itempar[, -1]), 1, itempar[, 1], "*"))
+        P_star <- numeritor/(1+numeritor) # this is the "true response"
+        
+        response[i, ] <- rowSums(P_star >= runif(nrow(itempar), min=0, max=1))
+        true_response[i, ] <- rowSums(P_star)
+      } else{
+        
+        numeritor <- exp((ability[i] - matrix(itempar[, -1], ncol = 1)) * matrix(itempar[, 1], ncol = 1))
+        P_star <- numeritor/(1+numeritor)
+        
+        response[i, ] <- rowSums(P_star >= matrix(runif(nrow(itempar), min=0, max=1)))
+        true_response[i, ] <- rowSums(P_star)
+      }
       
-      numeritor <- exp(sweep((ability[i]-itempar[, -1]), 1, itempar[, 1], "*"))
-      P_star <- numeritor/(1+numeritor) # this is the "true response"
-      
-      response[i, ] <- rowSums(P_star >= runif(nrow(itempar), min=0, max=1))
-      true_response[i, ] <- rowSums(P_star)
       
     }
  
