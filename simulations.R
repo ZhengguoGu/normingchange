@@ -21,7 +21,7 @@ GRM_sim <- function(ability, itempar){
     response <- matrix(NA, n_sub, nrow(itempar))
     true_response <- matrix(NA, n_sub, nrow(itempar))
     
-    # if true, then unidimensional 
+    
     for(i in 1:n_sub){
       
       numeritor <- exp(sweep((ability[i]-itempar[, -1]), 1, itempar[, 1], "*"))
@@ -135,6 +135,7 @@ while(num_test <= nrow(df)){
   }
   
   results_responseD[[num_test]] <- sim_result
+  num_test <- num_test + 1 
 }
 stopCluster(cl)
 
