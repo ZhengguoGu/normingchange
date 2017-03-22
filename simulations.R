@@ -74,8 +74,8 @@ results_responseD <- list()
 num_test <- 1
 set.seed(112) #need to double check this set.seed function. It is known what sometimes the seeds are not fixed. 
 
-
-cl <- makeCluster(2)
+no_cores <- detectCores() - 1
+cl <- makeCluster(no_cores)
 registerDoParallel(cl)
 while(num_test <= nrow(df)){
   
