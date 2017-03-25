@@ -167,7 +167,7 @@ b2 <- sqrt(.02/.25)
 th <- b1 * x + b2 * g + rnorm(n, 0, sqrt(.8*.2))
 cor(x, th) ^ 2
 cor(g, th) ^ 2
-
+var(th)
 results <- lm(th ~ g  + x)
 summary(results)
 library(lmSupport)
