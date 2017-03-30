@@ -3,7 +3,6 @@
 #######   Zhengguo Gu Tilburg University  #########
 #######       Last update: 29/03/2017     #########
 ###################################################
-#note that this is the file to generate response data.
 
 library(foreach)
 #library(doParallel)
@@ -82,8 +81,8 @@ colnames(df) <- c("sample_size", "proportionExplained", "polytomous", "num_items
 item_par <- list()
 
 num_test <- 1
-#while(num_test <= nrow(df)){
-while(num_test <= 2){ 
+while(num_test <= nrow(df)){
+#while(num_test <= 2){ 
   
   set.seed(112)  # set seed
   
@@ -138,7 +137,7 @@ while(num_test <= 2){
   #library(lmSupport)
   #modelEffectSizes(fit)
   
-  cl <- makeCluster(6)
+  cl <- makeCluster(12)
   registerDoSNOW(cl)
 
   #note that set.seed() and %dorng% ensure that parallel computing generates reproducable results.
