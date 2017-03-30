@@ -3,6 +3,7 @@
 #######   Zhengguo Gu Tilburg University  #########
 #######       Last update: 29/03/2017     #########
 ###################################################
+#note that this is the file to generate response data.
 
 library(foreach)
 #library(doParallel)
