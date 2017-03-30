@@ -1,11 +1,10 @@
 ###################################################
 ####### simulation: Norming change scores #########
 #######   Zhengguo Gu Tilburg University  #########
-#######       Last update: 29/03/2017     #########
+#######       Last update: 30/03/2017     #########
 ###################################################
 
 library(foreach)
-#library(doParallel)
 library(doSNOW)
 library(doRNG)
 
