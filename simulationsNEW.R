@@ -165,7 +165,7 @@ while(num_test <= 2){
   
   
   filename <- paste("results_", num_test, ".RData", sep = "")
-  save(sim_result, file = filename)
+  save(c(X1, X2, sim_result), file = filename)
   itemparamter <- paste("item_", num_test, ".RData", sep = "")
   save(item_par, file = itemparamter)
   num_test <- num_test + 1 
