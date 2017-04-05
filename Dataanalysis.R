@@ -1,10 +1,23 @@
- ##############################################################
+##############################################################
 #########                                        #############
 ######### Data Analysis: Norming change scores   #############
 #########                                        #############
 #########      Zhengguo Gu, Tilburg University   #############
 #########      Last update: 31/03/2017           #############
 ##############################################################
+
+
+####################### PART I: Calculating IPR ####################################
+
+####################################################################################
+###### NOTE: PART I was used to generate the datasets                         ######
+###### 20170402firstrun.RData and 20170403secondrun.RData                     ######
+###### (The two datasets are identical. I generated two datasets to double    ######
+######  check whether PART I is reproducible. And yes, it is.)                ######
+######                                                                        ######
+###### (Note that a copy of PART I can be found in the folder                 ######
+###### "Project2 - normingchange/20170403datanalaysis/phdproj2Zhengguo"       ######
+####################################################################################
 
 library(foreach)
 library(doSNOW)
@@ -93,4 +106,29 @@ while(num_test <= 360){
 
   num_test <- num_test + 1
 }
-#
+
+
+########################## PART II:  checking reproducability  #########################################
+#### This is to double check the reproducability of the Rcode "Dataanalysis.R" 
+####
+#### Here, we compared the results from "20170402firstrun.RData" and those from 
+#### "20170403secondrun.RData". They MUST be identical. (Note that the reason 
+#### to check this is because parallel computing is used in "Dataanalysis.R"
+#### and we must make sure that the results after parallel computing are assembled
+#### in the same way - thus reproducable. As a side, when writing the code 
+#### "Dataanalysis.R", Zhengguo already checked the reproducability of the code,
+#### and thus this is just to DOUBLE check to make sure. )
+#### 
+#### The two datasets were checked on Zhengguo's office computer on 2017 - 04 - 05. 
+#######################################################################################################
+load(file ="D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170403 dataanalysis/phdproj2Zhengguo/20170402firstrun.RData")
+first <- IPR_reg
+load(file ="D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170403 dataanalysis/phdproj2Zhengguo/20170403secondrun.RData")
+second <- IPR_reg
+
+identical(first, second)  # the result is TRUE. 
+
+
+########################### PART III: ANOVA ###########################################################
+
+load(file ="D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170403 dataanalysis/phdproj2Zhengguo/20170402firstrun.RData")
