@@ -106,8 +106,10 @@ while(num_test <= 360){
 
   num_test <- num_test + 1
 }
+colnames(IPR_reg) <- c("1%", "5%", "10%", "25%", "50%", "75%", "90%", "95%", "99%")
+colnames(IPR_Tscore) <- c("1%", "5%", "10%", "25%", "50%", "75%", "90%", "95%", "99%")
 
-
+save(IPR_reg, IPR_Tscore, file = "20170405firstrun.RData")
 ########################## PART II:  checking reproducability  #########################################
 #### This is to double check the reproducability of the Rcode "Dataanalysis.R" 
 ####
@@ -121,9 +123,9 @@ while(num_test <= 360){
 #### 
 #### The two datasets were checked on Zhengguo's office computer on 2017 - 04 - 05. 
 #######################################################################################################
-load(file ="D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170403 dataanalysis/phdproj2Zhengguo/20170402firstrun.RData")
+load(file ="D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170405 dataanalysis/phdproj2Zhengguo/20170405firstrun.RData")
 first <- IPR_reg
-load(file ="D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170403 dataanalysis/phdproj2Zhengguo/20170403secondrun.RData")
+load(file ="D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170405 dataanalysis/phdproj2Zhengguo/20170403secondrun.RData")
 second <- IPR_reg
 
 identical(first, second)  # the result is TRUE. 
@@ -131,4 +133,37 @@ identical(first, second)  # the result is TRUE.
 
 ########################### PART III: ANOVA ###########################################################
 
-load(file ="D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170403 dataanalysis/phdproj2Zhengguo/20170402firstrun.RData")
+load(file ="D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170405 dataanalysis/phdproj2Zhengguo/20170405firstrun.RData")
+
+# 1. get the design factors.
+# Note: The following code is from simulationsNEW.R, where we know which design factors are in which cell.
+sample_sizeV = c(100, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 5000, 6000, 7000, 8000, 9000, 10000)  #sample size 
+propEV <- c(0, .065/2, .13/2, .26/2)  # proportion of explained by each predictor. 
+polytomousV <- c(TRUE, FALSE)  # if true, simulate polytomous response data 
+num_itemsV <- c(10, 20, 40) # 10, 20, and 40
+num_conditions <- length(sample_sizeV) * length(propEV) * length(polytomousV) * length(num_itemsV)
+conditions <- list()
+p <- 1
+for(i in 1:length(sample_sizeV)){
+  for(j in 1:length(propEV)){
+    for(k in 1:length(polytomousV)){
+      for(l in 1:length(num_itemsV)){
+        conditions[[p]] <- c(sample_sizeV[i], propEV[j], polytomousV[k], num_itemsV[l])
+        p <- p+1
+      }
+    }
+  }
+}
+
+df <- data.frame(matrix(unlist(conditions), nrow=num_conditions, byrow = T))
+colnames(df) <- c("sample_size", "proportionExplained", "polytomous", "num_items")
+
+# 2. Combine results with design factors.
+
+IPR_regData <- cbind(IPR_reg, df, "regression-based")
+colnames(IPR_regData)[14] <- c("NormingMethod")
+
+IPR_TData <- cbind(IPR_Tscore, df, "TScore")
+colnames(IPR_TData)[14] <- c("NormingMethod")
+
+IPR_Data <- rbind(IPR_regData, IPR_TData)
