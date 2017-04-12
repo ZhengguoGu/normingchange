@@ -167,3 +167,122 @@ IPR_TData <- cbind(IPR_Tscore, df, "TScore")
 colnames(IPR_TData)[14] <- c("NormingMethod")
 
 IPR_Data <- rbind(IPR_regData, IPR_TData)
+
+# 3. anova 
+library(lsr)  #to calculate eta squared
+
+summary(IPR_Data)  #design factors need to be coded as factors (categorical)
+IPR_Data$num_items <- factor(IPR_Data$num_items, levels = c(10, 20, 40))
+IPR_Data$polytomous <- factor(IPR_Data$polytomous, levels = c(0, 1))
+IPR_Data$proportionExplained <- factor(IPR_Data$proportionExplained, levels = c(0, .065/2, .13/2, .26/2))
+summary(IPR_Data) #check again
+
+fit1 <- aov(`1%` ~ sample_size + proportionExplained + polytomous + num_items + NormingMethod+
+                  sample_size : proportionExplained + 
+                  sample_size : polytomous +
+                  sample_size : num_items +
+                  sample_size : NormingMethod, data=IPR_Data)
+summary(fit1)
+
+eta1 <- etaSquared(fit1)
+
+
+fit5 <- aov(`5%` ~ sample_size + proportionExplained + polytomous + num_items + NormingMethod+
+              sample_size : proportionExplained + 
+              sample_size : polytomous +
+              sample_size : num_items +
+              sample_size : NormingMethod, data=IPR_Data)
+summary(fit5)
+eta5 <- etaSquared(fit5)
+
+fit10 <- aov(`10%` ~ sample_size + proportionExplained + polytomous + num_items + NormingMethod+
+              sample_size : proportionExplained + 
+              sample_size : polytomous +
+              sample_size : num_items +
+              sample_size : NormingMethod, data=IPR_Data)
+summary(fit10)
+eta10 <- etaSquared(fit10)
+
+fit25 <- aov(`25%` ~ sample_size + proportionExplained + polytomous + num_items + NormingMethod+
+               sample_size : proportionExplained + 
+               sample_size : polytomous +
+               sample_size : num_items +
+               sample_size : NormingMethod, data=IPR_Data)
+summary(fit25)
+eta25 <- etaSquared(fit25)
+
+fit50 <- aov(`50%` ~ sample_size + proportionExplained + polytomous + num_items + NormingMethod+
+               sample_size : proportionExplained + 
+               sample_size : polytomous +
+               sample_size : num_items +
+               sample_size : NormingMethod, data=IPR_Data)
+summary(fit50)
+eta50 <- etaSquared(fit50)
+
+
+fit75 <- aov(`75%` ~ sample_size + proportionExplained + polytomous + num_items + NormingMethod+
+               sample_size : proportionExplained + 
+               sample_size : polytomous +
+               sample_size : num_items +
+               sample_size : NormingMethod, data=IPR_Data)
+summary(fit75)
+eta75 <- etaSquared(fit75)
+
+fit90 <- aov(`90%` ~ sample_size + proportionExplained + polytomous + num_items + NormingMethod+
+               sample_size : proportionExplained + 
+               sample_size : polytomous +
+               sample_size : num_items +
+               sample_size : NormingMethod, data=IPR_Data)
+summary(fit90)
+eta90 <- etaSquared(fit90)
+
+fit95 <- aov(`95%` ~ sample_size + proportionExplained + polytomous + num_items + NormingMethod+
+               sample_size : proportionExplained + 
+               sample_size : polytomous +
+               sample_size : num_items +
+               sample_size : NormingMethod, data=IPR_Data)
+summary(fit95)
+eta95 <- etaSquared(fit95)
+
+fit99 <- aov(`99%` ~ sample_size + proportionExplained + polytomous + num_items + NormingMethod+
+               sample_size : proportionExplained + 
+               sample_size : polytomous +
+               sample_size : num_items +
+               sample_size : NormingMethod, data=IPR_Data)
+summary(fit99)
+eta99 <- etaSquared(fit99)
+
+etamatrix <- cbind(eta1[,1], eta5[, 1], eta10[, 1], eta25[, 1], eta50[, 1], eta75[, 1], eta90[, 1], eta95[, 1], eta99[, 1])
+colnames(etamatrix) <- c("1%", "5%", "10%", "25%", "50%", "75%", "90%", "95%", "99%")
+write.table(etamatrix, file = 'D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170405 dataanalysis/phdproj2Zhengguo/etamatrix.txt', sep = ',')
+
+
+# 4. relationship between sample size and IPRs
+IPR_Data # make use of this datamatrix
+
+aggreIPR <- aggregate(IPR_Data[, 1:9], by = list(IPR_Data$'sample_size', IPR_Data$'NormingMethod'), FUN = mean) 
+
+#plot
+
+maintext = paste(c("1th", "5th", "10th", "25th", "50th", "75th", "90th", "95th", "99th"), "percentile")
+
+for(i in 1:9){
+  
+  filename <- paste("D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170419/IPR_", i, ".png", sep = "")
+  png(file=filename, width = 1200, height = 1200, units = "px")
+  
+  layout(rbind(1,2), heights=c(10,1))# put legend on bottom 1/10th of the chart (note, this is from http://stackoverflow.com/questions/8929663/r-legend-placement-in-a-plot)
+  par(mar=c(5,4,4,5)+.1)
+  plot(aggreIPR[1:15, i+2], type = "b", xlab = "Sample size", ylab = "IPR", xaxt="n", main = maintext[i], ylim = c(0, 1), pch = 15)
+  axis(1, at=1:15,labels=aggreIPR[1:15, 1], las=2)
+  lines(aggreIPR[16:30, i+2], pch = 18, type = "b", lty = 2)
+  
+  par(mar=c(0,0,0,0))
+  plot.new()
+  legend("center", "groups",
+         c("regression-based change approach", "Tscore method"),
+         pch=c(15, 18),
+         lty = c(1, 2),
+         ncol=2, bty = "n")
+  dev.off()
+}
