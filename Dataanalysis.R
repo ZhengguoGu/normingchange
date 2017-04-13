@@ -160,99 +160,109 @@ colnames(df) <- c("sample_size", "proportionExplained", "polytomous", "num_items
 
 # 2. Combine results with design factors.
 
-IPR_regData <- cbind(IPR_reg, df, "regression-based")
-colnames(IPR_regData)[14] <- c("NormingMethod")
+IPR_regData <- cbind(IPR_reg, df, "regression-based", seq(1:360))
+colnames(IPR_regData)[c(14, 15)] <- c("NormingMethod", "simulationcell")
 
-IPR_TData <- cbind(IPR_Tscore, df, "TScore")
-colnames(IPR_TData)[14] <- c("NormingMethod")
+IPR_TData <- cbind(IPR_Tscore, df, "TScore", seq(1:360))
+colnames(IPR_TData)[c(14, 15)] <- c("NormingMethod", "simulationcell")
 
 IPR_Data <- rbind(IPR_regData, IPR_TData)
 
-# 3. anova 
-library(lsr)  #to calculate eta squared
+# 3. mixed anova 
+library(DescTools)  #to calculate eta squared
 
 summary(IPR_Data)  #design factors need to be coded as factors (categorical)
 IPR_Data$num_items <- factor(IPR_Data$num_items, levels = c(10, 20, 40))
 IPR_Data$polytomous <- factor(IPR_Data$polytomous, levels = c(0, 1))
 IPR_Data$proportionExplained <- factor(IPR_Data$proportionExplained, levels = c(0, .065/2, .13/2, .26/2))
+IPR_Data$simulationcell <- factor(IPR_Data$simulationcell, levels = seq(1:360))
 summary(IPR_Data) #check again
 
 fit1 <- aov(`1%` ~ sample_size + proportionExplained + polytomous + num_items + NormingMethod+
                   sample_size : proportionExplained + 
                   sample_size : polytomous +
                   sample_size : num_items +
-                  sample_size : NormingMethod, data=IPR_Data)
+                  sample_size : NormingMethod +
+                  Error(simulationcell/NormingMethod), data=IPR_Data)
 summary(fit1)
 
-eta1 <- etaSquared(fit1)
+eta1 <- EtaSq(fit1, type = 1)
 
 
 fit5 <- aov(`5%` ~ sample_size + proportionExplained + polytomous + num_items + NormingMethod+
               sample_size : proportionExplained + 
               sample_size : polytomous +
               sample_size : num_items +
-              sample_size : NormingMethod, data=IPR_Data)
+              sample_size : NormingMethod +
+              Error(simulationcell/NormingMethod), data=IPR_Data)
 summary(fit5)
-eta5 <- etaSquared(fit5)
+eta5 <- EtaSq(fit5, type = 1)
 
 fit10 <- aov(`10%` ~ sample_size + proportionExplained + polytomous + num_items + NormingMethod+
               sample_size : proportionExplained + 
               sample_size : polytomous +
               sample_size : num_items +
-              sample_size : NormingMethod, data=IPR_Data)
+              sample_size : NormingMethod +
+               Error(simulationcell/NormingMethod), data=IPR_Data)
 summary(fit10)
-eta10 <- etaSquared(fit10)
+eta10 <- EtaSq(fit10, type = 1)
 
 fit25 <- aov(`25%` ~ sample_size + proportionExplained + polytomous + num_items + NormingMethod+
                sample_size : proportionExplained + 
                sample_size : polytomous +
                sample_size : num_items +
-               sample_size : NormingMethod, data=IPR_Data)
+               sample_size : NormingMethod +
+               Error(simulationcell/NormingMethod), data=IPR_Data)
 summary(fit25)
-eta25 <- etaSquared(fit25)
+eta25 <- EtaSq(fit25, type = 1)
 
 fit50 <- aov(`50%` ~ sample_size + proportionExplained + polytomous + num_items + NormingMethod+
                sample_size : proportionExplained + 
                sample_size : polytomous +
                sample_size : num_items +
-               sample_size : NormingMethod, data=IPR_Data)
+               sample_size : NormingMethod +
+               Error(simulationcell/NormingMethod), data=IPR_Data)
 summary(fit50)
-eta50 <- etaSquared(fit50)
+eta50 <- EtaSq(fit50, type = 1)
 
 
 fit75 <- aov(`75%` ~ sample_size + proportionExplained + polytomous + num_items + NormingMethod+
                sample_size : proportionExplained + 
                sample_size : polytomous +
                sample_size : num_items +
-               sample_size : NormingMethod, data=IPR_Data)
+               sample_size : NormingMethod +
+               Error(simulationcell/NormingMethod), data=IPR_Data)
 summary(fit75)
-eta75 <- etaSquared(fit75)
+eta75 <- EtaSq(fit75, type = 1)
 
 fit90 <- aov(`90%` ~ sample_size + proportionExplained + polytomous + num_items + NormingMethod+
                sample_size : proportionExplained + 
                sample_size : polytomous +
                sample_size : num_items +
-               sample_size : NormingMethod, data=IPR_Data)
+               sample_size : NormingMethod +
+               Error(simulationcell/NormingMethod), data=IPR_Data)
 summary(fit90)
-eta90 <- etaSquared(fit90)
+eta90 <- EtaSq(fit90, type = 1)
 
 fit95 <- aov(`95%` ~ sample_size + proportionExplained + polytomous + num_items + NormingMethod+
                sample_size : proportionExplained + 
                sample_size : polytomous +
                sample_size : num_items +
-               sample_size : NormingMethod, data=IPR_Data)
+               sample_size : NormingMethod +
+               Error(simulationcell/NormingMethod), data=IPR_Data)
 summary(fit95)
-eta95 <- etaSquared(fit95)
+eta95 <- EtaSq(fit95, type = 1)
 
 fit99 <- aov(`99%` ~ sample_size + proportionExplained + polytomous + num_items + NormingMethod+
                sample_size : proportionExplained + 
                sample_size : polytomous +
                sample_size : num_items +
-               sample_size : NormingMethod, data=IPR_Data)
+               sample_size : NormingMethod +
+               Error(simulationcell/NormingMethod), data=IPR_Data)
 summary(fit99)
-eta99 <- etaSquared(fit99)
+eta99 <- EtaSq(fit99, type = 1)
 
-etamatrix <- cbind(eta1[,1], eta5[, 1], eta10[, 1], eta25[, 1], eta50[, 1], eta75[, 1], eta90[, 1], eta95[, 1], eta99[, 1])
+etamatrix <- cbind(eta1[,2], eta5[, 2], eta10[, 2], eta25[, 2], eta50[, 2], eta75[, 2], eta90[, 2], eta95[, 2], eta99[, 2])
 colnames(etamatrix) <- c("1%", "5%", "10%", "25%", "50%", "75%", "90%", "95%", "99%")
 write.table(etamatrix, file = 'D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170405 dataanalysis/phdproj2Zhengguo/etamatrix.txt', sep = ',')
 
