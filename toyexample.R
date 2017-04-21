@@ -1,7 +1,7 @@
 ##### Toy example to show that RCI is not qualified as a norming method #####
 ##### Zhengguo Gu Tilburg University 
 
-
+set.seed(110)
 sample_size <- 10000000
 
 T1 <- rnorm(sample_size, 0, sqrt(8.45^2*0.9)) 
@@ -32,8 +32,9 @@ for(i in 1:length(rel_sample)){
   
 }
 
+ytick <- paste(seq(1:10)*10, "%", sep = "")
 
-plot(false_reliaChange, type = "b", xlab = "Reliability at Pretest", ylab = "Proportion of persons falsely identified", xaxt="n", ylim = c(0, 1), pch = 15)
+plot(false_reliaChange, type = "b", xlab = "Reliability at Pretest", ylab = "Proportion of persons falsely identified", xaxt="n", yaxt="n", ylim=c(0,1), pch = 15)
 axis(1, at=1:11,labels=rel_sample, las=1)
-
+axis(2, at=seq(.1, 1, by = .1),labels = ytick, las=1)
 
