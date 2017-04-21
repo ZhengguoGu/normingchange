@@ -2,18 +2,6 @@
 ##### Zhengguo Gu Tilburg University 
 
 set.seed(110)
-sample_size <- 10000000
-
-T1 <- rnorm(sample_size, 0, sqrt(8.45^2*0.9)) 
-E1 <- rnorm(sample_size, 0, sqrt(8.45^2*0.1))
-
-X1 <- T1 + E1 
-sd(X1)
-rel_x <- var(T1)/var(X1)
-SE <- sd(X1)*sqrt(1-rel_x )
-sdiff <- sqrt(2*SE^2)
-RCInorm <- sdiff*1.96
-
 
 sample_size <- 10000
 rel_sample <- c(.5, .55, .6, .65, .7, .75, .8, .85, .9, .95, 1)
@@ -21,7 +9,7 @@ false_reliaChange <- array()
 rel_samp1 <- array()
 rel_samp2 <- array()
 for(i in 1:length(rel_sample)){
-  samp_T1 <- sample(T1, size=sample_size, replace=FALSE)
+  samp_T1 <- rnorm(sample_size, 0, sqrt(8.45^2*0.91))
   samp_X1 <- samp_T1 + rnorm(sample_size, 0, sqrt(var(samp_T1)/rel_sample[i]-var(samp_T1)))
   rel_samp1[i] <- var(samp_T1)/var(samp_X1)
 
