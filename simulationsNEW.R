@@ -5,6 +5,7 @@
 ###################################################
 
 library(foreach)
+library(psychometric)
 library(doSNOW)
 library(doRNG)
 
@@ -154,7 +155,9 @@ while(num_test <= nrow(df)){
     sum_pre <- rowSums(X_pre)
     sum_post <- rowSums(X_post)
     
-    list_sum <- cbind(sum_pre, sum_post)
+    Difference_item <- X_post - X_pre
+    change_rel <- psychometric::alpha(Difference_item)
+    list_sum <- cbind(sum_pre, sum_post, change_rel)
     
     return(list_sum)
   }
