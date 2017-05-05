@@ -29,7 +29,7 @@ while(num_test <= 360){
   # scores of 1000 datasets are 'cbind'ed. For example, the results of the first 
   # test condition:
   
-  filename <- paste("D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170505 newdata en analysis/Zhengguophdpro2Blad/results_", num_test, ".RData", sep = "")
+  filename <- paste("D:/ZhengguoProj2Blad analysis/results_", num_test, ".RData", sep = "")
   load(filename)
 
   #dim(sim_result)  #100 x 2000 matrix. 100: 100 persons. 2000: 1000 datasets, each contain a pretest and posttest
