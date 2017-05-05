@@ -10,13 +10,8 @@
 ####################### PART I: Calculating IPR ####################################
 
 ####################################################################################
-###### NOTE: PART I was used to generate the datasets                         ######
-###### 20170402firstrun.RData and 20170403secondrun.RData                     ######
-###### (The two datasets are identical. I generated two datasets to double    ######
-######  check whether PART I is reproducible. And yes, it is.)                ######
-######                                                                        ######
-###### (Note that a copy of PART I can be found in the folder                 ######
-###### "Project2 - normingchange/20170403datanalaysis/phdproj2Zhengguo"       ######
+###### NOTE: PART I was used to generate the dataset.                         ######
+###### 20170505IPR.RData.RData                                                ######
 ####################################################################################
 
 library(foreach)
