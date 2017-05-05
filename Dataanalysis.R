@@ -110,30 +110,11 @@ colnames(IPR_reg) <- c("1%", "5%", "10%", "25%", "50%", "75%", "90%", "95%", "99
 colnames(IPR_Tscore) <- c("1%", "5%", "10%", "25%", "50%", "75%", "90%", "95%", "99%")
 
 save(IPR_reg, IPR_Tscore, REL_changescore, file = "20170505IPR.RData")
-########################## PART II:  checking reproducability  #########################################
-#### This is to double check the reproducability of the Rcode "Dataanalysis.R" 
-####
-#### Here, we compared the results from "20170402firstrun.RData" and those from 
-#### "20170403secondrun.RData". They MUST be identical. (Note that the reason 
-#### to check this is because parallel computing is used in "Dataanalysis.R"
-#### and we must make sure that the results after parallel computing are assembled
-#### in the same way - thus reproducable. As a side, when writing the code 
-#### "Dataanalysis.R", Zhengguo already checked the reproducability of the code,
-#### and thus this is just to DOUBLE check to make sure. )
-#### 
-#### The two datasets were checked on Zhengguo's office computer on 2017 - 04 - 05. 
-#######################################################################################################
-load(file ="D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170405 dataanalysis/phdproj2Zhengguo/20170405firstrun.RData")
-first <- IPR_reg
-load(file ="D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170405 dataanalysis/phdproj2Zhengguo/20170403secondrun.RData")
-second <- IPR_reg
-
-identical(first, second)  # the result is TRUE. 
 
 
-########################### PART III: ANOVA ###########################################################
+########################### PART II: ANOVA ###########################################################
 
-load(file ="D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170405 dataanalysis/phdproj2Zhengguo/20170405firstrun.RData")
+load(file ="D:/ZhengguoProj2Blad analysis/20170505IPR.RData")
 
 # 1. get the design factors.
 # Note: The following code is from simulationsNEW.R, where we know which design factors are in which cell.
@@ -160,11 +141,11 @@ colnames(df) <- c("sample_size", "proportionExplained", "polytomous", "num_items
 
 # 2. Combine results with design factors.
 
-IPR_regData <- cbind(IPR_reg, df, "regression-based", seq(1:360))
-colnames(IPR_regData)[c(14, 15)] <- c("NormingMethod", "simulationcell")
+IPR_regData <- cbind(IPR_reg, df, "regression-based", seq(1:360), REL_changescore)
+colnames(IPR_regData)[c(14, 15, 16, 17)] <- c("NormingMethod", "simulationcell", "ChangeRel", "ChangeRel1SD")
 
-IPR_TData <- cbind(IPR_Tscore, df, "TScore", seq(1:360))
-colnames(IPR_TData)[c(14, 15)] <- c("NormingMethod", "simulationcell")
+IPR_TData <- cbind(IPR_Tscore, df, "TScore", seq(1:360), REL_changescore)
+colnames(IPR_TData)[c(14, 15, 16, 17)] <- c("NormingMethod", "simulationcell", "ChangeRel", "ChangeRel1SD")
 
 IPR_Data <- rbind(IPR_regData, IPR_TData)
 
@@ -264,7 +245,7 @@ eta99 <- EtaSq(fit99, type = 1)
 
 etamatrix <- cbind(eta1[,2], eta5[, 2], eta10[, 2], eta25[, 2], eta50[, 2], eta75[, 2], eta90[, 2], eta95[, 2], eta99[, 2])
 colnames(etamatrix) <- c("1%", "5%", "10%", "25%", "50%", "75%", "90%", "95%", "99%")
-write.table(etamatrix, file = 'D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170405 dataanalysis/phdproj2Zhengguo/etamatrix.txt', sep = ',')
+write.table(etamatrix, file = 'D:/ZhengguoProj2Blad analysis/etamatrix.txt', sep = ',')
 
 
 # 4. relationship between sample size and IPRs
