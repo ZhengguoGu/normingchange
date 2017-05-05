@@ -114,7 +114,7 @@ while(num_test <= 360){
 colnames(IPR_reg) <- c("1%", "5%", "10%", "25%", "50%", "75%", "90%", "95%", "99%")
 colnames(IPR_Tscore) <- c("1%", "5%", "10%", "25%", "50%", "75%", "90%", "95%", "99%")
 
-save(IPR_reg, IPR_Tscore, file = "20170405firstrun.RData")
+save(IPR_reg, IPR_Tscore, REL_changescore, file = "20170405firstrun.RData")
 ########################## PART II:  checking reproducability  #########################################
 #### This is to double check the reproducability of the Rcode "Dataanalysis.R" 
 ####
