@@ -259,7 +259,7 @@ maintext = paste(c("1th", "5th", "10th", "25th", "50th", "75th", "90th", "95th",
 
 for(i in 1:9){
   
-  filename <- paste("D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170419/IPR_", i, ".png", sep = "")
+  filename <- paste("D:/ZhengguoProj2Blad analysis/IPR_", i, ".png", sep = "")
   png(file=filename, width = 1200, height = 1200, units = "px")
   
   layout(rbind(1,2), heights=c(10,1))# put legend on bottom 1/10th of the chart (note, this is from http://stackoverflow.com/questions/8929663/r-legend-placement-in-a-plot)
