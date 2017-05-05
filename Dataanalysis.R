@@ -3,7 +3,7 @@
 ######### Data Analysis: Norming change scores   #############
 #########                                        #############
 #########      Zhengguo Gu, Tilburg University   #############
-#########      Last update: 31/03/2017           #############
+#########      Last update: 05/05/2017           #############
 ##############################################################
 
 
@@ -25,6 +25,7 @@ library(doRNG)
  
 IPR_reg <- matrix(NA, 360, 9) 
 IPR_Tscore <- matrix(NA, 360, 9)
+REL_changescore <- matrix(NA, 360, 2)  #first column: averaged reliability, second column: sd
 num_test <- 1
 while(num_test <= 360){
   
@@ -33,25 +34,29 @@ while(num_test <= 360){
   # scores of 1000 datasets are 'cbind'ed. For example, the results of the first 
   # test condition:
   
-  filename <- paste("D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170330 simresult/phdpro2BladZhengguo/results_", num_test, ".RData", sep = "")
+  filename <- paste("D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170505 newdata en analysis/Zhengguophdpro2Blad/results_", num_test, ".RData", sep = "")
   load(filename)
 
   #dim(sim_result)  #100 x 2000 matrix. 100: 100 persons. 2000: 1000 datasets, each contain a pretest and posttest
                  #score, and thus 1000x2=2000
 
   # 2. standardize scores. 
-  mydata <- scale(sim_result, center = TRUE, scale = TRUE)
+  mydata <- scale(sim_result, center = TRUE, scale = TRUE)  #note that sim_result contains estimated reliability. But recale does not change the results of reliability (because the 
+                                                            # entire column has the same reliability) But somehow the reliabilities in mydata matrix have been replaced by NaN.
 
   # identical((sim_result[, 22] - mean(sim_result[, 22]))/sd(sim_result[, 22]), mydata[,22])
 
   # 3. reorganize the data 
   datalist <- list()
+  rellist <- array()
   j <- 1
-  for(i in seq(from = 1, to = 2000, by = 2)){
+  for(i in seq(from = 1, to = 3000, by = 3)){
     datalist[[j]] <- mydata[, c(i, i+1)]
+    rellist[j] <- sim_result[1, i+2]   #this is reliability, we pick the first row of the column (or whichever row we like), because the entire column has the same value.
     j <- j + 1
   }
-
+  REL_changescore[num_test, 1] <- mean(rellist)
+  REL_changescore[num_test, 2] <- sd(rellist)
   ##############################################################
   ###### norming methods
   ##############################################################
@@ -61,12 +66,12 @@ while(num_test <= 360){
     change <- Data[, 2] - Data[, 1]
     return(change)
   }
-  changescores <- lapply(datalist, changescore)
+  changescores <- lapply(datalist, changescore)  
   # identical(trial[[15]], datalist[[15]][,2] - datalist[[15]][,1])
 
 
   # Parallel computing
-  cl <- makeCluster(12)
+  cl <- makeCluster(8)
   registerDoSNOW(cl)
 
   set.seed(112)  # set seed, gonna use parallel computing
@@ -103,7 +108,7 @@ while(num_test <= 360){
 
   IPR_reg[num_test, ] <- apply(qZmatrix, 2, calculate_IPR)
   IPR_Tscore[num_test, ] <- apply(qTmatrix, 2, calculate_IPR)
-
+  
   num_test <- num_test + 1
 }
 colnames(IPR_reg) <- c("1%", "5%", "10%", "25%", "50%", "75%", "90%", "95%", "99%")
