@@ -29,7 +29,8 @@ while(num_test <= 360){
   # scores of 1000 datasets are 'cbind'ed. For example, the results of the first 
   # test condition:
   
-  filename <- paste("D:/ZhengguoProj2Blad analysis/results_", num_test, ".RData", sep = "")
+  filename <- paste("D:/ZhengguoProj2Blad analysis/results_", num_test, ".RData", sep = "")  
+     # note that "D:/ZhengguoProj2Blad analysis/results..." means that the analysis is done on Blade Server
   load(filename)
 
   #dim(sim_result)  #100 x 2000 matrix. 100: 100 persons. 2000: 1000 datasets, each contain a pretest and posttest
@@ -277,3 +278,13 @@ for(i in 1:9){
          ncol=2, bty = "n")
   dev.off()
 }
+
+
+################ PART III: Descriptives ###################
+# Note: Ideally descriptive table should be provided before the analysis
+# but I forgot to provide the table until Wilco read my draft and asked about it.
+# Here I include the descriptive table. 
+# We use the IPR_Data data matrix from PART II: AVONA as a start
+
+des_table <- IPR_Data[which(IPR_Data$sample_size==1000 & IPR_Data$NormingMethod == "regression-based"), ]
+
