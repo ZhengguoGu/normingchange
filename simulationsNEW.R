@@ -1,7 +1,7 @@
 ###################################################
 ####### simulation: Norming change scores #########
 #######   Zhengguo Gu Tilburg University  #########
-#######       Last update: 30/03/2017     #########
+#######       Last update: 01/05/2017     #########
 ###################################################
 
 library(foreach)
