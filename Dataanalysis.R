@@ -350,3 +350,4 @@ DescripTable <- cbind(df[49:72, ], TESTSCORE, REL_changescore[49:72,])
 colnames(DescripTable)[c(1:4, 11:12)] <- c("sample_size", "proportionExplained", "polytomous", "num_items", "change_reliability", "sd_reliability")
 
 save(DescripTable, file ="D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170505 newdata en analysis/Zhengguophdpro2Blad/DescriTable.RData")
+write.table(DescripTable, file = 'D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170505 newdata en analysis/Zhengguophdpro2Blad/DescriTable.txt', sep = ',')
