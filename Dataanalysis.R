@@ -33,12 +33,11 @@ while(num_test <= 360){
      # note that "D:/ZhengguoProj2Blad analysis/results..." means that the analysis is done on Blade Server
   load(filename)
 
-  #dim(sim_result)  #100 x 2000 matrix. 100: 100 persons. 2000: 1000 datasets, each contain a pretest and posttest
-                 #score, and thus 1000x2=2000
+  #dim(sim_result)  #100 x 2000 matrix. 100: 100 persons. 3000: 1000 datasets, each contain a pretest, a posttest, and an estimated change-score reliability
+                    # and thus 1000x3=3000
 
   # 2. standardize scores. 
-  mydata <- scale(sim_result, center = TRUE, scale = TRUE)  #note that sim_result contains estimated reliability. But recale does not change the results of reliability (because the 
-                                                            # entire column has the same reliability) But somehow the reliabilities in mydata matrix have been replaced by NaN.
+  mydata <- scale(sim_result, center = TRUE, scale = TRUE)  #Rescale pretest and posttest raw scores. note that sim_result contains estimated reliability, but scaling does not affect reliability.
 
   # identical((sim_result[, 22] - mean(sim_result[, 22]))/sd(sim_result[, 22]), mydata[,22])
 
@@ -284,7 +283,70 @@ for(i in 1:9){
 # Note: Ideally descriptive table should be provided before the analysis
 # but I forgot to provide the table until Wilco read my draft and asked about it.
 # Here I include the descriptive table. 
-# We use the IPR_Data data matrix from PART II: AVONA as a start
+# Because sample sizes differ, I choose sample size = 1000. 
 
-des_table <- IPR_Data[which(IPR_Data$sample_size==1000 & IPR_Data$NormingMethod == "regression-based"), ]
 
+sample_sizeV = c(100, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 5000, 6000, 7000, 8000, 9000, 10000)  #sample size 
+propEV <- c(0, .065/2, .13/2, .26/2)  # proportion of explained by each predictor. 
+polytomousV <- c(TRUE, FALSE)  # if true, simulate polytomous response data 
+num_itemsV <- c(10, 20, 40) # 10, 20, and 40
+num_conditions <- length(sample_sizeV) * length(propEV) * length(polytomousV) * length(num_itemsV)
+conditions <- list()
+p <- 1
+for(i in 1:length(sample_sizeV)){
+  for(j in 1:length(propEV)){
+    for(k in 1:length(polytomousV)){
+      for(l in 1:length(num_itemsV)){
+        conditions[[p]] <- c(sample_sizeV[i], propEV[j], polytomousV[k], num_itemsV[l])
+        p <- p+1
+      }
+    }
+  }
+}
+
+df <- data.frame(matrix(unlist(conditions), nrow=num_conditions, byrow = T))
+colnames(df) <- c("sample_size", "proportionExplained", "polytomous", "num_items")
+
+TESTSCORE <- matrix(NA, 24, 6)
+colnames(TESTSCORE) <- c("mean_pretest", "sd_pretest", "mean_posttest", "sd_posttest", "mean_change", "sd_change")
+num_test <- 49
+while(num_test <= 72){
+  
+  # 1. reorganize the data.
+
+  #filename <- paste("D:/ZhengguoProj2Blad analysis/results_", num_test, ".RData", sep = "")
+  filename <- paste("D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170505 newdata en analysis/Zhengguophdpro2Blad/results_", num_test, ".RData", sep = "")
+  
+  # note that "D:/ZhengguoProj2Blad analysis/results..." means that the analysis is done on Blade Server
+  load(filename)
+  
+  #dim(sim_result)  #1000 (persons) x 3000 matrix
+  
+  # 2. reorganize the data 
+  pretest <- array()
+  posttest <- array()
+  changescore <- array()
+  j <- 1
+  for(i in seq(from = 1, to = 3000, by = 3)){
+    pretest[j] <- mean(sim_result[, i])
+    posttest[j] <- mean(sim_result[, i+1])
+    changescore[j] <- posttest[j] - pretest[j]
+    j <- j + 1
+  }
+  
+  TESTSCORE[num_test-48,1] <- mean(pretest) 
+  TESTSCORE[num_test-48,2] <- sd(pretest)
+  TESTSCORE[num_test-48,3] <- mean(posttest)
+  TESTSCORE[num_test-48,4] <- sd(posttest)
+  TESTSCORE[num_test-48,5] <- mean(changescore)
+  TESTSCORE[num_test-48,6] <- sd(changescore)
+
+  num_test <- num_test + 1
+}
+
+  # 3. Combine with the data we have in PART III
+load(file ="D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170505 newdata en analysis/Zhengguophdpro2Blad/20170505IPR.RData")
+DescripTable <- cbind(df[49:72, ], TESTSCORE, REL_changescore[49:72,])
+colnames(DescripTable)[c(1:4, 11:12)] <- c("sample_size", "proportionExplained", "polytomous", "num_items", "change_reliability", "sd_reliability")
+
+save(DescripTable, file ="D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170505 newdata en analysis/Zhengguophdpro2Blad/DescriTable.RData")
