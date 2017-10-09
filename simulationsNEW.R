@@ -98,10 +98,10 @@ while(num_test <= nrow(df)){
     itempar <- matrix(NA,num_items,5)
     itempar[,1] <- runif(num_items,1.5,2.5)   # discrimination
     avg_beta <- runif(num_items, 0, 1.25)
-    itempar[,2] <- avg_beta - 1
-    itempar[,3] <- avg_beta - .5
-    itempar[,4] <- avg_beta + .5
-    itempar[,5] <- avg_beta + 1
+    itempar[,2] <- avg_beta - .75
+    itempar[,3] <- avg_beta - .25
+    itempar[,4] <- avg_beta + .25
+    itempar[,5] <- avg_beta + .75
     
   } else{
     
