@@ -29,7 +29,7 @@ while(num_test <= 360){
   # scores of 1000 datasets are 'cbind'ed. For example, the results of the first 
   # test condition:
   
-  filename <- paste("D:/ZhengguoProj2Blad analysis/results_", num_test, ".RData", sep = "")  
+  filename <- paste("D:/ZG/results_", num_test, ".RData", sep = "")  
      # note that "D:/ZhengguoProj2Blad analysis/results..." means that the analysis is done on Blade Server
   load(filename)
 
@@ -109,12 +109,12 @@ while(num_test <= 360){
 colnames(IPR_reg) <- c("1%", "5%", "10%", "25%", "50%", "75%", "90%", "95%", "99%")
 colnames(IPR_Tscore) <- c("1%", "5%", "10%", "25%", "50%", "75%", "90%", "95%", "99%")
 
-save(IPR_reg, IPR_Tscore, REL_changescore, file = "20170505IPR.RData")
+save(IPR_reg, IPR_Tscore, REL_changescore, file = "D:/ZG/20171011IPR.RData")
 
 
 ########################### PART II: ANOVA ###########################################################
 
-load(file ="D:/ZhengguoProj2Blad analysis/20170505IPR.RData")
+load(file ="D:/ZG/20171011IPR.RData")
 
 # 1. get the design factors.
 # Note: The following code is from simulationsNEW.R, where we know which design factors are in which cell.
@@ -245,7 +245,7 @@ eta99 <- EtaSq(fit99, type = 1)
 
 etamatrix <- cbind(eta1[,2], eta5[, 2], eta10[, 2], eta25[, 2], eta50[, 2], eta75[, 2], eta90[, 2], eta95[, 2], eta99[, 2])
 colnames(etamatrix) <- c("1%", "5%", "10%", "25%", "50%", "75%", "90%", "95%", "99%")
-write.table(etamatrix, file = 'D:/ZhengguoProj2Blad analysis/etamatrix.txt', sep = ',')
+write.table(etamatrix, file = 'D:/ZG/etamatrix.txt', sep = ',')
 
 
 # 4. relationship between sample size and IPRs
