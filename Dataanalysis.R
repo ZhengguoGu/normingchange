@@ -3,7 +3,9 @@
 ######### Data Analysis: Norming change scores   #############
 #########                                        #############
 #########      Zhengguo Gu, Tilburg University   #############
-#########      Last update: 05/05/2017           #############
+#########      Last update: 16/10/2017           #############
+#########                                        #############
+# Note: the descriptive analysis is at the bottom of this file 
 ##############################################################
 
 
@@ -11,7 +13,7 @@
 
 ####################################################################################
 ###### NOTE: PART I was used to generate the dataset.                         ######
-###### 20170505IPR.RData.RData                                                ######
+###### 20171011IPR.RData.RData                                                ######
 ####################################################################################
 
 library(foreach)
@@ -114,7 +116,8 @@ save(IPR_reg, IPR_Tscore, REL_changescore, file = "D:/ZG/20171011IPR.RData")
 
 ########################### PART II: ANOVA ###########################################################
 
-load(file ="D:/ZG/20171011IPR.RData")
+load(file ="D:/ZG/20171011IPR.RData") #on TiSEM blade server
+load(file ="D:\\Dropbox\\Tilburg office\\Research Individual change\\Project 2 - norming change\\20171010 newdata/20171011IPR.RData")  #at home
 
 # 1. get the design factors.
 # Note: The following code is from simulationsNEW.R, where we know which design factors are in which cell.
@@ -147,7 +150,7 @@ colnames(IPR_regData)[c(14, 15, 16, 17)] <- c("NormingMethod", "simulationcell",
 IPR_TData <- cbind(IPR_Tscore, df, "TScore", seq(1:360), REL_changescore)
 colnames(IPR_TData)[c(14, 15, 16, 17)] <- c("NormingMethod", "simulationcell", "ChangeRel", "ChangeRel1SD")
 
-IPR_Data <- rbind(IPR_regData, IPR_TData)
+IPR_Data <- rbind(IPR_regData, IPR_TData)  #important
 
 # 3. mixed anova 
 library(DescTools)  #to calculate eta squared
@@ -245,11 +248,12 @@ eta99 <- EtaSq(fit99, type = 1)
 
 etamatrix <- cbind(eta1[,2], eta5[, 2], eta10[, 2], eta25[, 2], eta50[, 2], eta75[, 2], eta90[, 2], eta95[, 2], eta99[, 2])
 colnames(etamatrix) <- c("1%", "5%", "10%", "25%", "50%", "75%", "90%", "95%", "99%")
-write.table(etamatrix, file = 'D:/ZG/etamatrix.txt', sep = ',')
+write.table(etamatrix, file = 'D:/ZG/etamatrix.txt', sep = ',')  #save at TiSEM blade server
+write.table(etamatrix, file = 'D:\\Dropbox\\Tilburg office\\Research Individual change\\Project 2 - norming change\\20171010 newdata/etamatrix.txt', sep = ',')  #save at home computer
 
 
 # 4. relationship between sample size and IPRs
-IPR_Data # make use of this datamatrix
+IPR_Data # make use of this datamatrix (obtained from part II, see above)
 
 aggreIPR <- aggregate(IPR_Data[, 1:9], by = list(IPR_Data$'sample_size', IPR_Data$'NormingMethod'), FUN = mean) 
 
@@ -259,7 +263,7 @@ maintext = paste(c("1th", "5th", "10th", "25th", "50th", "75th", "90th", "95th",
 
 for(i in 1:9){
   
-  filename <- paste("D:/ZhengguoProj2Blad analysis/IPR_", i, ".png", sep = "")
+  filename <- paste("D:\\Dropbox\\Tilburg office\\Research Individual change\\Project 2 - norming change\\20171010 newdata/IPR_", i, ".png", sep = "")
   png(file=filename, width = 1200, height = 1200, units = "px")
   
   layout(rbind(1,2), heights=c(10,1))# put legend on bottom 1/10th of the chart (note, this is from http://stackoverflow.com/questions/8929663/r-legend-placement-in-a-plot)
@@ -315,7 +319,7 @@ while(num_test <= 72){
   # 1. reorganize the data.
 
   #filename <- paste("D:/ZhengguoProj2Blad analysis/results_", num_test, ".RData", sep = "")
-  filename <- paste("D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170505 newdata en analysis/Zhengguophdpro2Blad/results_", num_test, ".RData", sep = "")
+  filename <- paste("D:\\Dropbox\\Tilburg office\\Research Individual change\\Project 2 - norming change\\20171010 newdata/results_", num_test, ".RData", sep = "")
   
   # note that "D:/ZhengguoProj2Blad analysis/results..." means that the analysis is done on Blade Server
   load(filename)
@@ -345,9 +349,9 @@ while(num_test <= 72){
 }
 
   # 3. Combine with the data we have in PART III
-load(file ="D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170505 newdata en analysis/Zhengguophdpro2Blad/20170505IPR.RData")
+load(file ="D:\\Dropbox\\Tilburg office\\Research Individual change\\Project 2 - norming change\\20171010 newdata/20171011IPR.RData")
 DescripTable <- cbind(df[49:72, ], TESTSCORE, REL_changescore[49:72,])
 colnames(DescripTable)[c(1:4, 11:12)] <- c("sample_size", "proportionExplained", "polytomous", "num_items", "change_reliability", "sd_reliability")
 
-save(DescripTable, file ="D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170505 newdata en analysis/Zhengguophdpro2Blad/DescriTable.RData")
-write.table(DescripTable, file = 'D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/20170505 newdata en analysis/Zhengguophdpro2Blad/DescriTable.txt', sep = ',')
+save(DescripTable, file ="D:\\Dropbox\\Tilburg office\\Research Individual change\\Project 2 - norming change\\20171010 newdata/DescriTable.RData")
+write.table(DescripTable, file = 'D:\\Dropbox\\Tilburg office\\Research Individual change\\Project 2 - norming change\\20171010 newdata/DescriTable.txt', sep = ',')
