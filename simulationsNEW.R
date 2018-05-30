@@ -1,20 +1,27 @@
 ###################################################
 ####### simulation: Norming change scores #########
 #######   Zhengguo Gu Tilburg University  #########
-#######       Last update: 01/05/2017     #########
+#######       Last update: 30/05/2018     #########
 ###################################################
 
 library(foreach)
 library(psychometric)
 library(doSNOW)
 library(doRNG)
+library(Kendall)
 
+#########NEW Parameters that need to be adjusted manually################
+var_D <- .14 # .14 or 1.14
+rho_preD <- .1 # 0, .1, -.1
+#########################################################################
 
 tmp=proc.time()
 sample_sizeV = c(100, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 5000, 6000, 7000, 8000, 9000, 10000)  #sample size 
-propEV <- c(0, .065/2, .13/2, .26/2)  # proportion of explained by each predictor. 
+beta_pre <- rho_preD*sqrt(var_D) 
+propEV <- c((.065-rho_preD^2)*var_D/2, (.13-rho_preD^2)*var_D/2, (.26-rho_preD^2)*var_D/2)  # proportion of explained by each predictor. 
 polytomousV <- c(TRUE, FALSE)  # if true, simulate polytomous response data 
 num_itemsV <- c(10, 20, 40) # 10, 20, and 40
+
 
 
 
@@ -114,8 +121,8 @@ while(num_test <= nrow(df)){
   
   ####################### theta_D ###########################################
   
-  beta1 <- sqrt(propE * .14 / .25)  # For X1, dichotomous
-  beta2 <- sqrt(propE * .14 * 12 / (12 - 4)^2)             # For X2. continuous, uniform
+  beta1 <- sqrt(propE / .25)  # For X1, dichotomous
+  beta2 <- sqrt(propE * 12 / (12 - 4)^2)    # For X2. continuous, uniform
   
   # 1. simulate person parameters
   
@@ -125,7 +132,18 @@ while(num_test <= nrow(df)){
   
   # 1.2. expectation of theta_pretest, given X1 and X2
   
-  theta_D <- beta1 * X1 + beta2 * X2 + rnorm(sample_size, .75, sqrt(.14 - 2 * propE * .14))
+  theta_pre <- rnorm(sample_size, 0, 1)
+  
+  if(propE== (.065-rho_preD^2)*var_D/2){
+    var_Z <- var_D * (1 - 0.065)
+  }else if(propE == (.13-rho_preD^2)*var_D/2){
+    var_Z <- var_D * (1 - 0.13)
+  }else if (propE == (.26-rho_preD^2)*var_D/2){
+    var_Z <- var_D * (1 - 0.26)
+  }
+  theta_D <- beta1 * X1 + beta2 * X2 + beta_pre * theta_pre + rnorm(sample_size, .75, sqrt(var_Z))
+  theta_post <- theta_pre + theta_D
+  
   
   #var(theta_D)
   # 1.3. extra: check whether our setup is correct
@@ -144,10 +162,6 @@ while(num_test <= nrow(df)){
   sim_result <- foreach(i = 1:1000, .combine='cbind') %dorng% {
     
     ###################### Simulate response data #######################
-  
-    theta_pre <- rnorm(sample_size, 0, 1)
-    theta_post <- theta_pre + theta_D
-    
     
     X_pre <- GRM_sim(theta_pre, itempar)[[1]]
     X_post <- GRM_sim(theta_post, itempar)[[1]]
@@ -156,8 +170,14 @@ while(num_test <= nrow(df)){
     sum_post <- rowSums(X_post)
     
     Difference_item <- X_post - X_pre
+    Differecen_sum <- sum_post - sum_pre
+    
     change_rel <- psychometric::alpha(Difference_item)
-    list_sum <- cbind(sum_pre, sum_post, change_rel)
+    var_1 <- psychometric::alpha(sum_pre)
+    var_2 <- psychometric::alpha(sum_post)
+    
+    K_tau <- Kendall::Kendall(theta_D, Differecen_sum)
+    list_sum <- cbind(sum_pre, sum_post, change_rel, var_1, var_2, K_tau)
     
     return(list_sum)
   }
