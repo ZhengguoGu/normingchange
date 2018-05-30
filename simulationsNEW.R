@@ -16,6 +16,9 @@ rho_preD <- .1 # 0, .1, -.1
 #######################################################################################################
 
 tmp=proc.time()
+
+
+set.seed(112) # set seed
 sample_sizeV = c(100, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 5000, 6000, 7000, 8000, 9000, 10000)  #sample size 
 beta_pre <- rho_preD*sqrt(var_D) 
 propEV <- c((.065-rho_preD^2)*var_D/2, (.13-rho_preD^2)*var_D/2, (.26-rho_preD^2)*var_D/2)  # proportion of explained by each predictor. 
@@ -89,9 +92,7 @@ item_par <- list()
 
 num_test <- 1
 while(num_test <= nrow(df)){
- 
-  
-  set.seed(112)  # set seed
+
   
   sample_size <- df[num_test, 1]
   propE <- df[num_test, 2]
