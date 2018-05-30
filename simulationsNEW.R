@@ -10,10 +10,10 @@ library(doSNOW)
 library(doRNG)
 library(Kendall)
 
-#########NEW Parameters that need to be adjusted manually################
+#########NEW Parameters that need to be adjusted manually (1st revision at Assessment) ################
 var_D <- 1.14 # .14 or 1.14
 rho_preD <- .1 # 0, .1, -.1
-#########################################################################
+#######################################################################################################
 
 tmp=proc.time()
 sample_sizeV = c(100, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 5000, 6000, 7000, 8000, 9000, 10000)  #sample size 
@@ -191,8 +191,8 @@ while(num_test <= nrow(df)){
   
   filename <- paste("results_", num_test, ".RData", sep = "")
   save(theta_D, sim_result, file = filename)
-  #itemparamter <- paste("item_", num_test, ".RData", sep = "")
-  #save(item_par, file = itemparamter)
+  beta_paramter <- paste("beta_", num_test, ".RData", sep = "")
+  save(beta_pre, beta1, beta2, file = beta_paramter)
   num_test <- num_test + 1 
 }
 
