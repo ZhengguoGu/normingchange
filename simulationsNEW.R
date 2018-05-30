@@ -155,7 +155,7 @@ while(num_test <= nrow(df)){
   #library(lmSupport)
   #modelEffectSizes(fit)
   
-  ycl <- makeCluster(12)
+  cl <- makeCluster(12)
   registerDoSNOW(cl)
 
   #note that set.seed() and %dorng% ensure that parallel computing generates reproducable results.
@@ -199,4 +199,4 @@ while(num_test <= nrow(df)){
 
 
 proc.time()-tmp
-#save(df, results_responseD, )
+
