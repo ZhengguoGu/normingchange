@@ -11,7 +11,7 @@ library(doRNG)
 library(Kendall)
 
 #########NEW Parameters that need to be adjusted manually################
-var_D <- .14 # .14 or 1.14
+var_D <- 1.14 # .14 or 1.14
 rho_preD <- .1 # 0, .1, -.1
 #########################################################################
 
@@ -89,7 +89,7 @@ item_par <- list()
 
 num_test <- 1
 while(num_test <= nrow(df)){
-#while(num_test <= 2){ 
+ 
   
   set.seed(112)  # set seed
   
@@ -147,15 +147,14 @@ while(num_test <= nrow(df)){
   
   #var(theta_D)
   # 1.3. extra: check whether our setup is correct
-  #cor(X1, theta_D) ^ 2
-  #cor(X2, theta_D) ^ 2
-  
-  #fit <- lm(theta_D ~ X1 + X2)
+  #beta1^2*var(X1)+beta2^2*var(X2) + beta_pre^2 + var_Z #total variance, should be close to var_D
+  #var_D
+  #fit <- lm(theta_D ~ X1 + X2 + theta_pre)
   #summary(fit)
   #library(lmSupport)
   #modelEffectSizes(fit)
   
-  cl <- makeCluster(12)
+  ycl <- makeCluster(12)
   registerDoSNOW(cl)
 
   #note that set.seed() and %dorng% ensure that parallel computing generates reproducable results.
@@ -164,6 +163,12 @@ while(num_test <= nrow(df)){
     ###################### Simulate response data #######################
     
     X_pre <- GRM_sim(theta_pre, itempar)[[1]]
+    #result <- ltm::grm(X_pre)
+    #iParameters_hat <- matrix(unlist(result$coefficients), ncol = 5, byrow = TRUE)
+    #plot(iParameters_hat[, 5], itempar[, 1])
+    #plot(iParameters_hat[, 1], itempar[, 2])
+    #plot(iParameters_hat[, 2], itempar[, 3])
+    #plot(iParameters_hat[, 3], itempar[, 4])
     X_post <- GRM_sim(theta_post, itempar)[[1]]
     
     sum_pre <- rowSums(X_pre)
@@ -173,11 +178,10 @@ while(num_test <= nrow(df)){
     Differecen_sum <- sum_post - sum_pre
     
     change_rel <- psychometric::alpha(Difference_item)
-    var_1 <- psychometric::alpha(sum_pre)
-    var_2 <- psychometric::alpha(sum_post)
-    
-    K_tau <- Kendall::Kendall(theta_D, Differecen_sum)
-    list_sum <- cbind(sum_pre, sum_post, change_rel, var_1, var_2, K_tau)
+    var_1 <- var(sum_pre)
+    var_2 <- var(sum_post)
+  
+    list_sum <- cbind(sum_pre, sum_post, change_rel, var_1, var_2)
     
     return(list_sum)
   }
@@ -186,9 +190,9 @@ while(num_test <= nrow(df)){
   
   
   filename <- paste("results_", num_test, ".RData", sep = "")
-  save(X1, X2, sim_result, file = filename)
-  itemparamter <- paste("item_", num_test, ".RData", sep = "")
-  save(item_par, file = itemparamter)
+  save(theta_D, sim_result, file = filename)
+  #itemparamter <- paste("item_", num_test, ".RData", sep = "")
+  #save(item_par, file = itemparamter)
   num_test <- num_test + 1 
 }
 
