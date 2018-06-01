@@ -3,7 +3,7 @@
 ######### Data Analysis: Norming change scores   #############
 #########                                        #############
 #########      Zhengguo Gu, Tilburg University   #############
-#########      Last update: 16/10/2017           #############
+#########      Last update: 1 June, 2018         #############
 #########                                        #############
 # Note: the descriptive analysis is at the bottom of this file 
 ##############################################################
