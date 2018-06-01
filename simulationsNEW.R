@@ -120,8 +120,6 @@ while(num_test <= nrow(df)){
   
   item_par[[num_test]] <- itempar
   
-  ####################### theta_D ###########################################
-  
   beta1 <- sqrt(propE / .25)  # For X1, dichotomous
   beta2 <- sqrt(propE * 12 / (12 - 4)^2)    # For X2. continuous, uniform
   
@@ -131,7 +129,7 @@ while(num_test <= nrow(df)){
   X1 <- rbinom(sample_size, size = 1, prob = .5)
   X2 <- runif(sample_size, min = 4, max = 12)
   
-  # 1.2. expectation of theta_pretest, given X1 and X2
+  # 1.2. expectation of theta_pretest, given X1 and X2, and theta_pre
   
   theta_pre <- rnorm(sample_size, 0, 1)
   
@@ -176,15 +174,21 @@ while(num_test <= nrow(df)){
     sum_post <- rowSums(X_post)
     
     Difference_item <- X_post - X_pre
-    Differecen_sum <- sum_post - sum_pre
-    
+    Difference_sumscores <- sum_post - sum_pre
     change_rel <- psychometric::alpha(Difference_item)
     var_1 <- var(sum_pre)
     var_2 <- var(sum_post)
-  
-    list_sum <- cbind(sum_pre, sum_post, change_rel, var_1, var_2)
+    cor_12 <- cor(sum_pre, sum_post)
+    cor_preD <- cor(sum_pre, Difference_sumscores)  #correlation between observed pretest and observed change
+      
+    final_sim <- list()
+    list_sum <- cbind(sum_pre, sum_post) 
+    Rel_ect <- c(change_rel, var_1, var_2, cor_12, cor_preD )
     
-    return(list_sum)
+    final_sim[[1]] <- list_sum
+    final_sim[[2]] <- Rel_ect
+    
+    return(final_sim)
   }
 
   stopCluster(cl)
@@ -192,8 +196,8 @@ while(num_test <= nrow(df)){
   
   filename <- paste("results_", num_test, ".RData", sep = "")
   save(theta_D, sim_result, file = filename)
-  beta_paramter <- paste("beta_", num_test, ".RData", sep = "")
-  save(beta_pre, beta1, beta2, file = beta_paramter)
+  #beta_paramter <- paste("beta_", num_test, ".RData", sep = "")
+  #save(beta_pre, beta1, beta2, file = beta_paramter)
   num_test <- num_test + 1 
 }
 
