@@ -65,8 +65,7 @@ while(num_test <= 270){
 
   
   changescores <- lapply(datalist, changescore)  
-  # identical(trial[[15]], datalist[[15]][,2] - datalist[[15]][,1])
-
+  #identical(changescores[[15]], datalist[[15]][,2] - datalist[[15]][,1])
 
   # Parallel computing
   cl <- makeCluster(12)
