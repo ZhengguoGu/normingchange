@@ -20,49 +20,50 @@ library(foreach)
 library(doSNOW)
 library(doRNG)
  
-IPR_reg <- matrix(NA, 360, 9) 
-IPR_Tscore <- matrix(NA, 360, 9)
-REL_changescore <- matrix(NA, 360, 2)  #first column: averaged reliability, second column: sd
+IPR_reg <- matrix(NA, 270, 9) 
+IPR_Tscore <- matrix(NA, 270, 9)
+REL_changescore <- matrix(NA, 270, 2)  #first column: averaged reliability, second column: sd
+
+
+
+####### a small function ###############
+changescore <- function(Data){
+  change <- Data[, 2] - Data[, 1]
+  return(change)
+}
+########################################
+
 num_test <- 1
-while(num_test <= 360){
+while(num_test <= 270){
   
   # 1. reorganize the data.
-  # To save space, for each test condition (in total 360), pretest and posttest
-  # scores of 1000 datasets are 'cbind'ed. For example, the results of the first 
-  # test condition:
   
-  filename <- paste("D:/ZG/results_", num_test, ".RData", sep = "")  
-     # note that "D:/ZhengguoProj2Blad analysis/results..." means that the analysis is done on Blade Server
+  filename <- paste("results_", num_test, ".RData", sep = "")  
+     
   load(filename)
 
-  #dim(sim_result)  #100 x 2000 matrix. 100: 100 persons. 3000: 1000 datasets, each contain a pretest, a posttest, and an estimated change-score reliability
-                    # and thus 1000x3=3000
-
-  # 2. standardize scores. 
-  mydata <- scale(sim_result, center = TRUE, scale = TRUE)  #Rescale pretest and posttest raw scores. note that sim_result contains estimated reliability, but scaling does not affect reliability.
-
-  # identical((sim_result[, 22] - mean(sim_result[, 22]))/sd(sim_result[, 22]), mydata[,22])
+  ## 2. standardize scores. 
+  #mydata <- scale(sim_result, center = TRUE, scale = TRUE)  #Rescale pretest and posttest raw scores. note that sim_result contains estimated reliability, but scaling does not affect reliability.
 
   # 3. reorganize the data 
   datalist <- list()
-  rellist <- array()
-  j <- 1
-  for(i in seq(from = 1, to = 3000, by = 3)){
-    datalist[[j]] <- mydata[, c(i, i+1)]
-    rellist[j] <- sim_result[1, i+2]   #this is reliability, we pick the first row of the column (or whichever row we like), because the entire column has the same value.
-    j <- j + 1
+  rellist <- matrix(NA, 1000, 5)
+  
+  for(i in 1:1000){
+    datalist[[i]] <- sim_result[, i][[1]]
+    rellist[i, ] <- sim_result[, i][[2]]   #this is change_rel, var_1, var_2, cor_12, cor_preD
   }
-  REL_changescore[num_test, 1] <- mean(rellist)
-  REL_changescore[num_test, 2] <- sd(rellist)
+  mean_rellist <- colMeans(rellist)
+  sd_rellist <- apply(rellist, 2, sd)
+  
+  #REL_changescore[num_test, 1] <- mean(rellist) to discard
+  #REL_changescore[num_test, 2] <- sd(rellist) to discard
   ##############################################################
   ###### norming methods
   ##############################################################
   # 3. The regression-based change approach and T-score
 
-  changescore <- function(Data){
-    change <- Data[, 2] - Data[, 1]
-    return(change)
-  }
+  
   changescores <- lapply(datalist, changescore)  
   # identical(trial[[15]], datalist[[15]][,2] - datalist[[15]][,1])
 
