@@ -15,7 +15,7 @@
 ###### NOTE: PART I was used to generate the dataset.                         ######
 ###### 20171011IPR.RData.RData                                                ######
 ####################################################################################
-
+library(Kendall)
 library(foreach)
 library(doSNOW)
 library(doRNG)
@@ -49,21 +49,23 @@ while(num_test <= 270){
   datalist <- list()
   rellist <- matrix(NA, 1000, 5)
   
-  for(i in 1:1000){
-    datalist[[i]] <- sim_result[, i][[1]]
-    rellist[i, ] <- sim_result[, i][[2]]   #this is change_rel, var_1, var_2, cor_12, cor_preD
+  for(i in 0:999){
+    j <- i+1
+    k <- 2*i+1
+    l <- 2*i+2
+    datalist[[j]] <- sim_result[[k]]
+    rellist[j, ] <- sim_result[[l]]
   }
+    
   mean_rellist <- colMeans(rellist)
   sd_rellist <- apply(rellist, 2, sd)
   
-  #REL_changescore[num_test, 1] <- mean(rellist) to discard
-  #REL_changescore[num_test, 2] <- sd(rellist) to discard
+  
   ##############################################################
   ###### norming methods
   ##############################################################
   # 3. The regression-based change approach and T-score
 
-  
   changescores <- lapply(datalist, changescore)  
   #identical(changescores[[15]], datalist[[15]][,2] - datalist[[15]][,1])
 
@@ -76,18 +78,21 @@ while(num_test <= 270){
     
     # regression-based change approach
     fit <- lm(changescores[[i]] ~ X1 + X2)
-    Escore <- predict(fit) - changescores[[i]]
-    SD_e <- sqrt(sum(Escore^2)/(length(Escore) -2))
+    Escore <- changescores[[i]] - predict(fit) #residual
+    SD_e <- sqrt(sum(Escore^2)/(length(Escore) - 2))
     Zscore <- Escore/SD_e
     qZ <- quantile(Zscore, c(.01, .05, .1, .25, .50, .75, .90, .95, .99))
+    rank_cor_Z <- Kendall::Kendall(theta_D, Zscore)
+    
     # Tscore
     fit2 <- lm(datalist[[i]][, 2] ~ datalist[[i]][, 1] + X1 + X2)
-    Escore2 <- predict(fit2) - datalist[[i]][, 2]
-    SD_e2 <- sqrt(sum(Escore2^2)/(length(Escore2) -2))
+    Escore2 <-  datalist[[i]][, 2] - predict(fit2)
+    SD_e2 <- sqrt(sum(Escore2^2)/(length(Escore2) - 2))
     Tscore <- Escore2/SD_e2
     qT <- quantile(Tscore, c(.01, .05, .1, .25, .50, .75, .90, .95, .99))
-    
-    perc <- rbind(qZ, qT)
+    rank_cor_T <- Kendall::Kendall(theta_D, Tscore)
+
+    perc <- rbind(qZ, qT, rank_cor_Z, rank_cor_T)
 
     return(perc)
   }
