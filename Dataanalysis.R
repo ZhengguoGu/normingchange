@@ -22,15 +22,24 @@ library(doRNG)
  
 IPR_reg <- matrix(NA, 270, 9) 
 IPR_Tscore <- matrix(NA, 270, 9)
-REL_changescore <- matrix(NA, 270, 2)  #first column: averaged reliability, second column: sd
+Rankcorrelation_mean <- matrix(NA, 270, 2)
+Rankcorrelation_sd <- matrix(NA, 270, 2)
+Par_changescoreMean <- matrix(NA, 270, 2)  #first column: averaged reliability, second column: sd
+Par_changescoreSD <- matrix(NA, 270, 2)
 
 
-
-####### a small function ###############
+####### two functions ###############
 changescore <- function(Data){
   change <- Data[, 2] - Data[, 1]
   return(change)
 }
+
+# interprecentile range
+calculate_IPR <- function(DATA){
+  result <- quantile(DATA, c(.025, .975))
+  IPR <- result[2] - result[1]
+}
+
 ########################################
 
 num_test <- 1
@@ -57,10 +66,11 @@ while(num_test <= 270){
     rellist[j, ] <- sim_result[[l]]
   }
     
-  mean_rellist <- colMeans(rellist)
-  sd_rellist <- apply(rellist, 2, sd)
+  Par_changescoreMean[num_test,] <- colMeans(rellist)
+  Par_changescoreSD[num_test,] <- apply(rellist, 2, sd)
   
-  
+  colnames(Par_changescoreMean) <- c("change_rel", "var_pre", "var_post", "cor_prepost", "cor_preD")
+  colnames(Par_changescoreSD) <- c("change_rel", "var_pre", "var_post", "cor_prepost", "cor_preD")
   ##############################################################
   ###### norming methods
   ##############################################################
@@ -70,11 +80,11 @@ while(num_test <= 270){
   #identical(changescores[[15]], datalist[[15]][,2] - datalist[[15]][,1])
 
   # Parallel computing
-  cl <- makeCluster(12)
+  cl <- makeCluster(4)
   registerDoSNOW(cl)
 
   set.seed(112)  # set seed, gonna use parallel computing
-  ZT_result <- foreach(i = 1:1000, .combine='rbind') %dorng% {
+  ZT_result <- foreach(i = 1:1000, .combine='cbind') %dorng% {
     
     # regression-based change approach
     fit <- lm(changescores[[i]] ~ X1 + X2)
@@ -82,7 +92,7 @@ while(num_test <= 270){
     SD_e <- sqrt(sum(Escore^2)/(length(Escore) - 2))
     Zscore <- Escore/SD_e
     qZ <- quantile(Zscore, c(.01, .05, .1, .25, .50, .75, .90, .95, .99))
-    rank_cor_Z <- Kendall::Kendall(theta_D, Zscore)
+    rank_cor_Z <- Kendall::Kendall(theta_D, Zscore)$tau
     
     # Tscore
     fit2 <- lm(datalist[[i]][, 2] ~ datalist[[i]][, 1] + X1 + X2)
@@ -90,33 +100,44 @@ while(num_test <= 270){
     SD_e2 <- sqrt(sum(Escore2^2)/(length(Escore2) - 2))
     Tscore <- Escore2/SD_e2
     qT <- quantile(Tscore, c(.01, .05, .1, .25, .50, .75, .90, .95, .99))
-    rank_cor_T <- Kendall::Kendall(theta_D, Tscore)
+    rank_cor_T <- Kendall::Kendall(theta_D, Tscore)$tau
 
-    perc <- rbind(qZ, qT, rank_cor_Z, rank_cor_T)
-
+    perc <- list()
+    perc[[1]] <- rbind(qZ, qT)
+    perc[[2]] <- c(rank_cor_Z, rank_cor_T)
+    
     return(perc)
   }
   stopCluster(cl)
 
-
-  qZmatrix <- ZT_result[seq(from = 1, to = dim(ZT_result)[1], by = 2), ] #1000 rows (i.e., 1000 samples), each row contains the percentiles based on that sample
-  qTmatrix <- ZT_result[seq(from = 2, to = dim(ZT_result)[1], by = 2), ]
+  qZmatrix <- matrix(NA, 1000, 9)
+  qTmatrix <- matrix(NA, 1000, 9)
+  rank_corMat <- matrix(NA, 1000, 2)
   
-  # interprecentile range
-  calculate_IPR <- function(DATA){
-    result <- quantile(DATA, c(.025, .975))
-    IPR <- result[2] - result[1]
+  for(i in 0:999){
+    
+    j <- 2*i+1
+    k <- 2*i+2
+    l <- i + 1
+    qZmatrix[l, ] <- ZT_result[[j]][1,]
+    qTmatrix[l, ] <- ZT_result[[j]][2,]
+    rank_corMat[l, ] <- ZT_result[[k]]
+    
   }
-
+ 
+  
   IPR_reg[num_test, ] <- apply(qZmatrix, 2, calculate_IPR)
   IPR_Tscore[num_test, ] <- apply(qTmatrix, 2, calculate_IPR)
+  Rankcorrelation_mean[num_test, ] <- apply(rank_corMat, 2, mean)
+  Rankcorrelation_sd[num_test, ] <- apply(rank_corMat, 2, sd)
   
-  num_test <- num_test + 1
+  num_test <- num_test + 1 
 }
 colnames(IPR_reg) <- c("1%", "5%", "10%", "25%", "50%", "75%", "90%", "95%", "99%")
 colnames(IPR_Tscore) <- c("1%", "5%", "10%", "25%", "50%", "75%", "90%", "95%", "99%")
-
-save(IPR_reg, IPR_Tscore, REL_changescore, file = "D:/ZG/20171011IPR.RData")
+colnames(Rankcorrelation_mean) <- c("regression based", "T score")
+colnames(Rankcorrelation_sd) <- c("regression based", "T score")
+save(IPR_reg, IPR_Tscore, Rankcorrelation_mean, Rankcorrelation_sd, Par_changescoreMean, Par_changescoreSD, file = "D:/ZG/20171011IPR.RData")
 
 
 ########################### PART II: ANOVA ###########################################################
