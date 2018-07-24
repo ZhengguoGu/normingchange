@@ -8,7 +8,7 @@ library(foreach)
 library(psychometric)
 library(doSNOW)
 library(doRNG)
-library(Kendall)
+
 
 
 tmp=proc.time()
@@ -157,7 +157,7 @@ while(num_test <= nrow(df)){
   
   
   filename <- paste("results_", num_test, ".RData", sep = "")
-  save(X1, X2, sim_result, file = filename)
+  save(sim_result, file = filename)
   #beta_paramter <- paste("beta_", num_test, ".RData", sep = "")
   #save(beta_pre, beta1, beta2, file = beta_paramter)
   num_test <- num_test + 1 
