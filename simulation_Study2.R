@@ -109,7 +109,9 @@ while(num_test <= nrow(df)){
   item_par[[num_test]] <- itempar
   
   # 1. simulate person parameters
-
+  # 1.1. covariates X1 and X2
+  X1 <- rbinom(sample_size, size = 1, prob = .5)
+  X2 <- runif(sample_size, min = 4, max = 12)
   
   theta_pre <- rnorm(sample_size, 0, 1)
   theta_post <- theta_pre
@@ -157,7 +159,7 @@ while(num_test <= nrow(df)){
   
   
   filename <- paste("results_", num_test, ".RData", sep = "")
-  save(sim_result, file = filename)
+  save(X1, X2, sim_result, file = filename)
   #beta_paramter <- paste("beta_", num_test, ".RData", sep = "")
   #save(beta_pre, beta1, beta2, file = beta_paramter)
   num_test <- num_test + 1 

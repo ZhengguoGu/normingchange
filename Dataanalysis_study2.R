@@ -17,12 +17,11 @@ library(doSNOW)
 library(doRNG)
 library(psych)
  
-IPR_reg <- matrix(NA, 270, 9) 
-IPR_Tscore <- matrix(NA, 270, 9)
-Rankcorrelation_mean <- matrix(NA, 270, 2)
-Rankcorrelation_sd <- matrix(NA, 270, 2)
-Par_changescoreMean <- matrix(NA, 270, 2)  #first column: averaged reliability, second column: sd
-Par_changescoreSD <- matrix(NA, 270, 2)
+IPR_reg <- matrix(NA, 90, 9) 
+IPR_Tscore <- matrix(NA, 90, 9)
+
+Par_changescoreMean <- matrix(NA, 90, 2)  #first column: averaged reliability, second column: sd
+Par_changescoreSD <- matrix(NA, 90, 2)
 
 
 ####### two functions ###############
@@ -77,7 +76,7 @@ while(num_test <= 270){
   #identical(changescores[[15]], datalist[[15]][,2] - datalist[[15]][,1])
 
   # Parallel computing
-  cl <- makeCluster(4)
+  cl <- makeCluster(12)
   registerDoSNOW(cl)
 
   set.seed(112)  # set seed, gonna use parallel computing
