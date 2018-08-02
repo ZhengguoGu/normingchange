@@ -8,7 +8,7 @@ library(foreach)
 library(psychometric)
 library(doSNOW)
 library(doRNG)
-library(Kendall)
+
 
 #########NEW Parameters that need to be adjusted manually (for 1st revision at Assessment) ################
 var_D <- 1.14 # .14 or 1.14  
