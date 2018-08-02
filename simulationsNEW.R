@@ -121,7 +121,7 @@ while(num_test <= nrow(df)){
     itempar[,2] <- runif(num_items, 0, 1.25)
   }
   
-  item_par[[num_test]] <- itempar
+  #item_par[[num_test]] <- itempar #we dont save this anymore
   
   beta1 <- sqrt(propE / .25)  # For X1, dichotomous
   beta2 <- sqrt(propE * 12 / (12 - 4)^2)    # For X2. continuous, uniform
@@ -143,7 +143,7 @@ while(num_test <= nrow(df)){
   }else if (propE == (.26-rho_preD^2)*var_D/2){
     var_Z <- var_D * (1 - 0.26)
   }
-  theta_D <- beta1 * X1 + beta2 * X2 + beta_pre * theta_pre + rnorm(sample_size, .75, sqrt(var_Z))
+  theta_D <- beta1 * X1 + beta2 * X2 + beta_pre * theta_pre + rnorm(sample_size, .75, sqrt(var_Z)) # notice that beta_0 = .75 is included when we generate Z
   theta_post <- theta_pre + theta_D
   
   
@@ -196,9 +196,12 @@ while(num_test <= nrow(df)){
 
   stopCluster(cl)
   
+  #calculate residual true change
+  fit <- lm(theta_post ~ X1 + X2 + theta_pre)
+  res_trueTheta <- theta_post - predict(fit) #residual
   
   filename <- paste("results_", num_test, ".RData", sep = "")
-  save(X1, X2, theta_D, sim_result, file = filename)
+  save(X1, X2, theta_D, res_trueTheta, sim_result, file = filename)
   #beta_paramter <- paste("beta_", num_test, ".RData", sep = "")
   #save(beta_pre, beta1, beta2, file = beta_paramter)
   num_test <- num_test + 1 
