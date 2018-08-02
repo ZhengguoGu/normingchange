@@ -1,7 +1,7 @@
 ###################################################
 ####### simulation: Norming change scores #########
-#######   Zhengguo Gu Tilburg University  #########
-#######       Last update: 30/05/2018     #########
+#######                                   #########
+#######       Last update: 02/08/2018     #########
 ###################################################
 
 library(foreach)
@@ -10,8 +10,8 @@ library(doSNOW)
 library(doRNG)
 library(Kendall)
 
-#########NEW Parameters that need to be adjusted manually (1st revision at Assessment) ################
-var_D <- 1.14 # .14 or 1.14
+#########NEW Parameters that need to be adjusted manually (for 1st revision at Assessment) ################
+var_D <- 1.14 # .14 or 1.14  
 rho_preD <- .1 # 0, .1, -.1
 #######################################################################################################
 
@@ -20,8 +20,9 @@ tmp=proc.time()
 
 set.seed(112) # set seed
 sample_sizeV = c(100, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 5000, 6000, 7000, 8000, 9000, 10000)  #sample size 
-beta_pre <- rho_preD*sqrt(var_D) 
-propEV <- c((.065-rho_preD^2)*var_D/2, (.13-rho_preD^2)*var_D/2, (.26-rho_preD^2)*var_D/2)  # proportion of explained by each predictor. 
+beta_pre <- rho_preD*sqrt(var_D)    #see Equation (15) in the article
+propEV <- c((.065-rho_preD^2)*var_D/2, (.13-rho_preD^2)*var_D/2, (.26-rho_preD^2)*var_D/2)  # proportion of explained by each X1 and X2 (excluding theta_pre).
+                                                                                            # R^2=.065: small effect; = .13: medium effect; =.26: large effect.
 polytomousV <- c(TRUE, FALSE)  # if true, simulate polytomous response data 
 num_itemsV <- c(10, 20, 40) # 10, 20, and 40
 
@@ -43,13 +44,15 @@ GRM_sim <- function(ability, itempar){
     for(i in 1:n_sub){
       if(dim(itempar)[2] > 2){
         
-        numeritor <- exp(sweep((ability[i]-itempar[, -1]), 1, itempar[, 1], "*"))
+        #polytomous
+        numeritor <- exp(sweep((ability[i]-itempar[, -1]), 1, itempar[, 1], "*"))  #note: the first column of the itempar matrix contains the discrimination parameters; the rest columsn thresholds.
         P_star <- numeritor/(1+numeritor) # this is the "true response"
         
-        response[i, ] <- rowSums(P_star >= runif(nrow(itempar), min=0, max=1))
-        true_response[i, ] <- rowSums(P_star)
+        response[i, ] <- rowSums(P_star >= runif(nrow(itempar), min=0, max=1))  # this is the simulated item response
+        true_response[i, ] <- rowSums(P_star)  #sum of the probabilities, this is regarded as the true score
       } else{
         
+        #dichotomous 
         numeritor <- exp((ability[i] - matrix(itempar[, -1], ncol = 1)) * matrix(itempar[, 1], ncol = 1))
         P_star <- numeritor/(1+numeritor)
         
