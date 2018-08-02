@@ -39,7 +39,7 @@ calculate_IPR <- function(DATA){
 ########################################
 
 num_test <- 1
-while(num_test <= 270){
+while(num_test <= 90){
   
   # 1. reorganize the data.
   
@@ -80,7 +80,7 @@ while(num_test <= 270){
   registerDoSNOW(cl)
 
   set.seed(112)  # set seed, gonna use parallel computing
-  ZT_result <- foreach(i = 1:1000, .combine='cbind') %dorng% {
+  ZT_result <- foreach(i = 1:1000, .combine='rbind') %dorng% {
     
     # regression-based change approach
     fit <- lm(changescores[[i]] ~ X1 + X2)
@@ -88,7 +88,7 @@ while(num_test <= 270){
     SD_e <- sqrt(sum(Escore^2)/(length(Escore) - 2))
     Zscore <- Escore/SD_e
     qZ <- quantile(Zscore, c(.01, .05, .1, .25, .50, .75, .90, .95, .99))
-    rank_cor_Z <- Kendall::Kendall(theta_D, Zscore)$tau
+    
     
     # Tscore
     fit2 <- lm(datalist[[i]][, 2] ~ datalist[[i]][, 1] + X1 + X2)
@@ -96,11 +96,11 @@ while(num_test <= 270){
     SD_e2 <- sqrt(sum(Escore2^2)/(length(Escore2) - 2))
     Tscore <- Escore2/SD_e2
     qT <- quantile(Tscore, c(.01, .05, .1, .25, .50, .75, .90, .95, .99))
-    rank_cor_T <- Kendall::Kendall(theta_D, Tscore)$tau
+  
 
-    perc <- list()
-    perc[[1]] <- rbind(qZ, qT)
-    perc[[2]] <- c(rank_cor_Z, rank_cor_T)
+    
+    perc <- cbind(qZ, qT)
+   
     
     return(perc)
   }
