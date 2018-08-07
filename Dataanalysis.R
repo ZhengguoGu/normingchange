@@ -2,8 +2,7 @@
 #########                                        #############
 ######### Data Analysis: Norming change scores   #############
 #########                                        #############
-#########      Zhengguo Gu, Tilburg University   #############
-#########      Last update: 1 June, 2018         #############
+#########                                        #############
 #########                                        #############
 # Note: the descriptive analysis is at the bottom of this file 
 ##############################################################
@@ -21,10 +20,16 @@ IPR_reg <- matrix(NA, 270, 9)
 IPR_Tscore <- matrix(NA, 270, 9)
 Rankcorrelation_mean <- matrix(NA, 270, 2)
 Rankcorrelation_sd <- matrix(NA, 270, 2)
-Par_changescoreMean <- matrix(NA, 270, 2)  #first column: averaged reliability, second column: sd
-Par_changescoreSD <- matrix(NA, 270, 2)
-
-
+Par_changescoreMean <- matrix(NA, 270, 5)  #"change_rel", "var_pre", "var_post", "cor_prepost", "cor_preD"
+Par_changescoreSD <- matrix(NA, 270, 5)
+colnames(Par_changescoreMean) <- c("change_rel", "var_pre", "var_post", "cor_prepost", "cor_preD")
+colnames(Par_changescoreSD) <- c("change_rel", "var_pre", "var_post", "cor_prepost", "cor_preD")
+reg_coef_mean <- matrix(NA, 270, 5)   # regression based: coefficent X1, and X2; Tscore: pre, X1, X2
+reg_coef_max <- matrix(NA, 270, 5)
+reg_coef_min <- matrix(NA, 270, 5)
+colnames(reg_coef_mean) <- c("reg-based: X1", "reg-based: X2", "Tscore: pre", "Tscore: X1", "Tscore: X2")
+colnames(reg_coef_max) <- c("reg-based: X1", "reg-based: X2", "Tscore: pre", "Tscore: X1", "Tscore: X2")
+colnames(reg_coef_min) <- c("reg-based: X1", "reg-based: X2", "Tscore: pre", "Tscore: X1", "Tscore: X2")
 ####### two functions ###############
 changescore <- function(Data){
   change <- Data[, 2] - Data[, 1]
@@ -41,6 +46,7 @@ calculate_IPR <- function(DATA){
 
 num_test <- 1
 while(num_test <= 270){
+  print(num_test)
   
   # 1. reorganize the data.
   
@@ -59,15 +65,14 @@ while(num_test <= 270){
     j <- i+1
     k <- 2*i+1
     l <- 2*i+2
-    datalist[[j]] <- sim_result[[k]]
-    rellist[j, ] <- sim_result[[l]]
+    datalist[[j]] <- sim_result[[k]]  #contains the simulated pretest and posttest scores
+    rellist[j, ] <- sim_result[[l]]   #contains the change-score reliability, variance of pretest scores, variance of posttest, correlation betwen pretest posttest, correlation between pretest and change.
   }
     
   Par_changescoreMean[num_test,] <- colMeans(rellist)
   Par_changescoreSD[num_test,] <- apply(rellist, 2, sd)
   
-  colnames(Par_changescoreMean) <- c("change_rel", "var_pre", "var_post", "cor_prepost", "cor_preD")
-  colnames(Par_changescoreSD) <- c("change_rel", "var_pre", "var_post", "cor_prepost", "cor_preD")
+  
   ##############################################################
   ###### norming methods
   ##############################################################
@@ -77,7 +82,7 @@ while(num_test <= 270){
   #identical(changescores[[15]], datalist[[15]][,2] - datalist[[15]][,1])
 
   # Parallel computing
-  cl <- makeCluster(4)
+  cl <- makeCluster(10)
   registerDoSNOW(cl)
 
   set.seed(112)  # set seed, gonna use parallel computing
@@ -85,6 +90,7 @@ while(num_test <= 270){
     
     # regression-based change approach
     fit <- lm(changescores[[i]] ~ X1 + X2)
+    coef_regbased <- summary(fit)$coefficients[c(2,3), 1]
     Escore <- changescores[[i]] - predict(fit) #residual
     SD_e <- sqrt(sum(Escore^2)/(length(Escore) - 2))
     Zscore <- Escore/SD_e
@@ -93,16 +99,17 @@ while(num_test <= 270){
     
     # Tscore
     fit2 <- lm(datalist[[i]][, 2] ~ datalist[[i]][, 1] + X1 + X2)
+    coef_Tscore <- summary(fit2)$coefficients[c(2, 3, 4), 1]
     Escore2 <-  datalist[[i]][, 2] - predict(fit2)
     SD_e2 <- sqrt(sum(Escore2^2)/(length(Escore2) - 2))
     Tscore <- Escore2/SD_e2
     qT <- quantile(Tscore, c(.01, .05, .1, .25, .50, .75, .90, .95, .99))
-    rank_cor_T <- Kendall::Kendall(theta_D, Tscore)$tau
+    rank_cor_T <- Kendall::Kendall(res_trueTheta, Tscore)$tau  # note: there the res_trueTheta is the residual true change score (theta)
 
     perc <- list()
     perc[[1]] <- rbind(qZ, qT)
     perc[[2]] <- c(rank_cor_Z, rank_cor_T)
-    
+    perc[[3]] <- c(coef_regbased, coef_Tscore)
     return(perc)
   }
   stopCluster(cl)
@@ -110,15 +117,17 @@ while(num_test <= 270){
   qZmatrix <- matrix(NA, 1000, 9)
   qTmatrix <- matrix(NA, 1000, 9)
   rank_corMat <- matrix(NA, 1000, 2)
-  
+  coeff_ZT <- matrix(NA, 1000, 5)  #regression coefficients
   for(i in 0:999){
     
-    j <- 2*i+1
-    k <- 2*i+2
+    j <- 3*i+1
+    k <- 3*i+2
+    m <- 3*i+3
     l <- i + 1
     qZmatrix[l, ] <- ZT_result[[j]][1,]
     qTmatrix[l, ] <- ZT_result[[j]][2,]
     rank_corMat[l, ] <- ZT_result[[k]]
+    coeff_ZT[l, ] <- ZT_result[[m]]
     
   }
  
@@ -127,6 +136,10 @@ while(num_test <= 270){
   IPR_Tscore[num_test, ] <- apply(qTmatrix, 2, calculate_IPR)
   Rankcorrelation_mean[num_test, ] <- apply(rank_corMat, 2, mean)
   Rankcorrelation_sd[num_test, ] <- apply(rank_corMat, 2, sd)
+  reg_coef_mean[num_test, ] <- apply(coeff_ZT, 2, mean) # regression based: coefficent X1, and X2; Tscore: pre, X1, X2
+  reg_coef_max[num_test, ] <- apply(coeff_ZT, 2, max)
+  reg_coef_min[num_test, ] <- apply(coeff_ZT, 2, min)
+  
   
   num_test <- num_test + 1 
 }
@@ -134,7 +147,7 @@ colnames(IPR_reg) <- c("1%", "5%", "10%", "25%", "50%", "75%", "90%", "95%", "99
 colnames(IPR_Tscore) <- c("1%", "5%", "10%", "25%", "50%", "75%", "90%", "95%", "99%")
 colnames(Rankcorrelation_mean) <- c("regression based", "T score")
 colnames(Rankcorrelation_sd) <- c("regression based", "T score")
-save(IPR_reg, IPR_Tscore, Rankcorrelation_mean, Rankcorrelation_sd, Par_changescoreMean, Par_changescoreSD, file = "??.RData")
+save(IPR_reg, IPR_Tscore, Rankcorrelation_mean, Rankcorrelation_sd, Par_changescoreMean, Par_changescoreSD, reg_coef_mean, reg_coef_max, reg_coef_min, file = "??.RData")
 
 
 ########################### PART II: Comparing rank correlations and ANOVAs ###########################################################
