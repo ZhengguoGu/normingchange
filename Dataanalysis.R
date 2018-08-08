@@ -147,7 +147,7 @@ colnames(IPR_reg) <- c("1%", "5%", "10%", "25%", "50%", "75%", "90%", "95%", "99
 colnames(IPR_Tscore) <- c("1%", "5%", "10%", "25%", "50%", "75%", "90%", "95%", "99%")
 colnames(Rankcorrelation_mean) <- c("regression based", "T score")
 colnames(Rankcorrelation_sd) <- c("regression based", "T score")
-save(IPR_reg, IPR_Tscore, Rankcorrelation_mean, Rankcorrelation_sd, Par_changescoreMean, Par_changescoreSD, reg_coef_mean, reg_coef_max, reg_coef_min, file = "??.RData")
+save(IPR_reg, IPR_Tscore, Rankcorrelation_mean, Rankcorrelation_sd, Par_changescoreMean, Par_changescoreSD, reg_coef_mean, reg_coef_max, reg_coef_min, file = "??.RData")  #save data
 
 
 ########################### PART II: Comparing rank correlations and ANOVAs ###########################################################
@@ -177,8 +177,10 @@ for(i in 1:length(sample_sizeV)){
 df <- data.frame(matrix(unlist(conditions), nrow=num_conditions, byrow = T))
 colnames(df) <- c("sample_size", "proportionExplained", "polytomous", "num_items")
 
-# 2. Combine results with design factors.
-load(file ="D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/0submissionAssessment/1ReviseResubmit/20180604Simulation/smallVarRho0_IPR.RData") #Load simulation results
+# 2. Combine results with design factors. Note that there are in total 6 data files from simulationsNEW.R
+
+#-- file 1
+load(file ="varD_14_rho_0.RData") #Load simulation results
 
 IPR_regData <- cbind(IPR_reg, df, "regression-based", "VarD=.14", "Rho_preD=0", Par_changescoreMean, Par_changescoreSD, Rankcorrelation_mean[,1], Rankcorrelation_sd[,1])
 IPR_TData <- cbind(IPR_Tscore, df, "TScore", "VarD=.14", "Rho_preD=0", Par_changescoreMean, Par_changescoreSD, Rankcorrelation_mean[,2], Rankcorrelation_sd[,2])
@@ -190,8 +192,11 @@ colnames(IPR_TData)[seq(14, 28)] <- c("norming method", "var true change", "Rho_
                                         "Rel_change (mean)", "var_pre (mean)", "var_post (mean)", "cor_prepost (mean)", "cor_preD (mean)",
                                         "Rel_change (sd)", "var_pre (sd)", "var_post (sd)", "cor_prepost (sd)", "cor_preD (sd)",
                                         "Kendall (mean)", "Kendall (sd)")
+coef_data1 <- cbind(df, reg_coef_mean)
+write.csv(coef_data1, file = "estimatedCoef_varD_14_rho_0.csv")  # these coefficients will be submitted as supplementary material
 
-load(file ="D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/0submissionAssessment/1ReviseResubmit/20180604Simulation/smallVarRho1_IPR.RData") #Load simulation results
+#-- file 2
+load(file ="varD_14_rho_1.RData") #Load simulation results
 IPR_regData_temp1 <- cbind(IPR_reg, df, "regression-based", "VarD=.14", "Rho_preD=0.1", Par_changescoreMean, Par_changescoreSD, Rankcorrelation_mean[,1], Rankcorrelation_sd[,1])
 IPR_TData_temp1 <- cbind(IPR_Tscore, df, "TScore", "VarD=.14", "Rho_preD=0.1", Par_changescoreMean, Par_changescoreSD, Rankcorrelation_mean[,2], Rankcorrelation_sd[,2])
 colnames(IPR_regData_temp1)[seq(14, 28)] <- c("norming method", "var true change", "Rho_preD",
@@ -202,9 +207,11 @@ colnames(IPR_TData_temp1)[seq(14, 28)] <- c("norming method", "var true change",
                                       "Rel_change (mean)", "var_pre (mean)", "var_post (mean)", "cor_prepost (mean)", "cor_preD (mean)",
                                       "Rel_change (sd)", "var_pre (sd)", "var_post (sd)", "cor_prepost (sd)", "cor_preD (sd)",
                                       "Kendall (mean)", "Kendall (sd)")
+coef_data2 <- cbind(df, reg_coef_mean)
+write.csv(coef_data2, file = "estimatedCoef_varD_14_rho_1.csv") # these coefficients will be submitted as supplementary material
 
-
-load(file ="D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/0submissionAssessment/1ReviseResubmit/20180604Simulation/smallVarRho1Neg_IPR.RData")
+#-- file 3
+load(file ="varD_14_rho_neg1.RData")
 IPR_regData_temp2 <- cbind(IPR_reg, df, "regression-based", "VarD=.14", "Rho_preD=-0.1", Par_changescoreMean, Par_changescoreSD, Rankcorrelation_mean[,1], Rankcorrelation_sd[,1])
 IPR_TData_temp2 <- cbind(IPR_Tscore, df, "TScore", "VarD=.14", "Rho_preD=-0.1", Par_changescoreMean, Par_changescoreSD, Rankcorrelation_mean[,2], Rankcorrelation_sd[,2])
 colnames(IPR_regData_temp2)[seq(14, 28)] <- c("norming method", "var true change", "Rho_preD",
@@ -215,9 +222,11 @@ colnames(IPR_TData_temp2)[seq(14, 28)] <- c("norming method", "var true change",
                                             "Rel_change (mean)", "var_pre (mean)", "var_post (mean)", "cor_prepost (mean)", "cor_preD (mean)",
                                             "Rel_change (sd)", "var_pre (sd)", "var_post (sd)", "cor_prepost (sd)", "cor_preD (sd)",
                                             "Kendall (mean)", "Kendall (sd)")
+coef_data3 <- cbind(df, reg_coef_mean)
+write.csv(coef_data3, file = "estimatedCoef_varD_14_rho_neg1.csv") # these coefficients will be submitted as supplementary material
 
-
-load(file ="D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/0submissionAssessment/1ReviseResubmit/20180604Simulation/largeVarRho0_IPR.RData")
+#-- file 4
+load(file ="varD_114_rho_0.RData")
 IPR_regData_temp3 <- cbind(IPR_reg, df, "regression-based", "VarD=1.14", "Rho_preD=0", Par_changescoreMean, Par_changescoreSD, Rankcorrelation_mean[,1], Rankcorrelation_sd[,1])
 IPR_TData_temp3 <- cbind(IPR_Tscore, df, "TScore", "VarD=1.14", "Rho_preD=0", Par_changescoreMean, Par_changescoreSD, Rankcorrelation_mean[,2], Rankcorrelation_sd[,2])
 colnames(IPR_regData_temp3)[seq(14, 28)] <- c("norming method", "var true change", "Rho_preD",
@@ -228,8 +237,11 @@ colnames(IPR_TData_temp3)[seq(14, 28)] <- c("norming method", "var true change",
                                             "Rel_change (mean)", "var_pre (mean)", "var_post (mean)", "cor_prepost (mean)", "cor_preD (mean)",
                                             "Rel_change (sd)", "var_pre (sd)", "var_post (sd)", "cor_prepost (sd)", "cor_preD (sd)",
                                             "Kendall (mean)", "Kendall (sd)")
+coef_data4 <- cbind(df, reg_coef_mean)
+write.csv(coef_data4, file = "estimatedCoef_varD_114_rho_0.csv") # these coefficients will be submitted as supplementary material
 
-load(file ="D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/0submissionAssessment/1ReviseResubmit/20180604Simulation/largeVarRho1_IPR.RData")
+#-- file 5
+load(file ="varD_114_rho_1.RData")
 IPR_regData_temp4 <- cbind(IPR_reg, df, "regression-based", "VarD=1.14", "Rho_preD=0.1", Par_changescoreMean, Par_changescoreSD, Rankcorrelation_mean[,1], Rankcorrelation_sd[,1])
 IPR_TData_temp4 <- cbind(IPR_Tscore, df, "TScore", "VarD=1.14", "Rho_preD=0.1", Par_changescoreMean, Par_changescoreSD, Rankcorrelation_mean[,2], Rankcorrelation_sd[,2])
 colnames(IPR_regData_temp4)[seq(14, 28)] <- c("norming method", "var true change", "Rho_preD",
@@ -240,8 +252,11 @@ colnames(IPR_TData_temp4)[seq(14, 28)] <- c("norming method", "var true change",
                                             "Rel_change (mean)", "var_pre (mean)", "var_post (mean)", "cor_prepost (mean)", "cor_preD (mean)",
                                             "Rel_change (sd)", "var_pre (sd)", "var_post (sd)", "cor_prepost (sd)", "cor_preD (sd)",
                                             "Kendall (mean)", "Kendall (sd)")
+coef_data5 <- cbind(df, reg_coef_mean)
+write.csv(coef_data5, file = "estimatedCoef_varD_114_rho_1.csv") # these coefficients will be submitted as supplementary material
 
-load(file ="D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/0submissionAssessment/1ReviseResubmit/20180604Simulation/largeVarRho1Neg_IPR.RData")
+#-- file 6
+load(file ="varD_114_rho_neg1.RData")
 IPR_regData_temp5 <- cbind(IPR_reg, df, "regression-based", "VarD=1.14", "Rho_preD=-0.1", Par_changescoreMean, Par_changescoreSD, Rankcorrelation_mean[,1], Rankcorrelation_sd[,1])
 IPR_TData_temp5 <- cbind(IPR_Tscore, df, "TScore", "VarD=1.14", "Rho_preD=-0.1", Par_changescoreMean, Par_changescoreSD, Rankcorrelation_mean[,2], Rankcorrelation_sd[,2])
 colnames(IPR_regData_temp5)[seq(14, 28)] <- c("norming method", "var true change", "Rho_preD",
@@ -252,6 +267,8 @@ colnames(IPR_TData_temp5)[seq(14, 28)] <- c("norming method", "var true change",
                                             "Rel_change (mean)", "var_pre (mean)", "var_post (mean)", "cor_prepost (mean)", "cor_preD (mean)",
                                             "Rel_change (sd)", "var_pre (sd)", "var_post (sd)", "cor_prepost (sd)", "cor_preD (sd)",
                                             "Kendall (mean)", "Kendall (sd)")
+write.csv(coef_data6, file = "estimatedCoef_varD_114_rho_neg1.csv") # these coefficients will be submitted as supplementary material
+
 
 IPR_regF <- rbind(IPR_regData, IPR_regData_temp1, IPR_regData_temp2, IPR_regData_temp3, IPR_regData_temp4, IPR_regData_temp5)
 IPR_TDataF <- rbind(IPR_TData, IPR_TData_temp1, IPR_TData_temp2, IPR_TData_temp3, IPR_TData_temp4, IPR_TData_temp5)
@@ -262,13 +279,13 @@ IPR_TDataF <- cbind(seq(1620), IPR_TDataF)
 IPR_FINALData <- rbind(IPR_regF, IPR_TDataF)  #important! 
 colnames(IPR_FINALData)[1] <- "Cell No."
 
-save(IPR_FINALData, file = "D:/Dropbox/Tilburg office/Research Individual change/Project 2 - norming change/0submissionAssessment/1ReviseResubmit/20180604Simulation/IPR_FINALData.RData")
+save(IPR_FINALData, file = "IPR_FINALData.RData")
 
 ###########################################
 #### 4. Comparing rank correlations
 mean(IPR_FINALData[IPR_FINALData$`norming method`=="regression-based", 28])  #=0.3576953
-mean(IPR_FINALData[IPR_FINALData$`norming method`=="TScore", 28])  #=0.3836012
-t.test(IPR_FINALData[IPR_FINALData$`norming method`=="regression-based", 28], IPR_FINALData[IPR_FINALData$`norming method`=="TScore", 28], paired = TRUE)  # t = -43.984, df = 1619, p<.001
+mean(IPR_FINALData[IPR_FINALData$`norming method`=="TScore", 28])  #=0.4294376
+
 
 ### 4.1 a few descriptives 
 # 4.1.1 var(D)=.14, 0 correlation between pretest and change (theta level)
@@ -281,6 +298,8 @@ summary(IPR_FINALData[IPR_FINALData$`norming method`=="TScore" & IPR_FINALData$`
 summary(IPR_FINALData[IPR_FINALData$`norming method`=="regression-based" & IPR_FINALData$`var true change`=="VarD=.14" & IPR_FINALData$Rho_preD=="Rho_preD=0" & IPR_FINALData$num_items == 40, ])  #note that the results are copied to excel
 summary(IPR_FINALData[IPR_FINALData$`norming method`=="TScore" & IPR_FINALData$`var true change`=="VarD=.14" & IPR_FINALData$Rho_preD=="Rho_preD=0" & IPR_FINALData$num_items == 40, ])  #note that the results are copied to excel
 
+load(file ="varD_14_rho_0.RData")
+apply(reg_coef_mean, 2, mean)  # here we check the estimated regression coefficents, and summerized them in a table.
 
 # 4.1.2 var(D)=.14, .1 correlation between pretest and change
 summary(IPR_FINALData[IPR_FINALData$`norming method`=="regression-based" & IPR_FINALData$`var true change`=="VarD=.14" & IPR_FINALData$Rho_preD=="Rho_preD=0.1" & IPR_FINALData$num_items == 10, ])  #note that the results are copied to excel
@@ -351,6 +370,8 @@ fit1 <- aov(`1%` ~ sample_size + proportionExplained + polytomous + num_items + 
                   sample_size : polytomous +
                   sample_size : num_items +
                   sample_size : `norming method` +
+                  sample_size : `var true change` +
+                  sample_size : Rho_preD +
                   Error(`Cell No.`/`norming method`), data=IPR_FINALData)
 summary(fit1)
 
@@ -362,6 +383,8 @@ fit5 <- aov(`5%` ~ sample_size + proportionExplained + polytomous + num_items + 
               sample_size : polytomous +
               sample_size : num_items +
               sample_size : `norming method` +
+              sample_size : `var true change` +
+              sample_size : Rho_preD +
               Error(`Cell No.`/`norming method`), data=IPR_FINALData)
 summary(fit5)
 eta5 <- EtaSq(fit5, type = 1)
@@ -370,8 +393,10 @@ fit10 <- aov(`10%` ~ sample_size + proportionExplained + polytomous + num_items 
               sample_size : proportionExplained + 
               sample_size : polytomous +
               sample_size : num_items +
-              sample_size : `norming method` +
-               Error(`Cell No.`/`norming method`), data=IPR_FINALData)
+              sample_size : `norming method` + 
+              sample_size : `var true change` +
+              sample_size : Rho_preD +
+              Error(`Cell No.`/`norming method`), data=IPR_FINALData)
 summary(fit10)
 eta10 <- EtaSq(fit10, type = 1)
 
@@ -380,6 +405,8 @@ fit25 <- aov(`25%` ~ sample_size + proportionExplained + polytomous + num_items 
                sample_size : polytomous +
                sample_size : num_items +
                sample_size : `norming method` +
+               sample_size : `var true change` +
+               sample_size : Rho_preD +
                Error(`Cell No.`/`norming method`), data=IPR_FINALData)
 summary(fit25)
 eta25 <- EtaSq(fit25, type = 1)
@@ -389,6 +416,8 @@ fit50 <- aov(`50%` ~ sample_size + proportionExplained + polytomous + num_items 
                sample_size : polytomous +
                sample_size : num_items +
                sample_size : `norming method` +
+               sample_size : `var true change` +
+               sample_size : Rho_preD +
                Error(`Cell No.`/`norming method`), data=IPR_FINALData)
 summary(fit50)
 eta50 <- EtaSq(fit50, type = 1)
@@ -399,6 +428,8 @@ fit75 <- aov(`75%` ~ sample_size + proportionExplained + polytomous + num_items 
                sample_size : polytomous +
                sample_size : num_items +
                sample_size : `norming method` +
+               sample_size : `var true change` +
+               sample_size : Rho_preD +
                Error(`Cell No.`/`norming method`), data=IPR_FINALData)
 summary(fit75)
 eta75 <- EtaSq(fit75, type = 1)
@@ -408,6 +439,8 @@ fit90 <- aov(`90%` ~ sample_size + proportionExplained + polytomous + num_items 
                sample_size : polytomous +
                sample_size : num_items +
                sample_size : `norming method` +
+               sample_size : `var true change` +
+               sample_size : Rho_preD +
                Error(`Cell No.`/`norming method`), data=IPR_FINALData)
 summary(fit90)
 eta90 <- EtaSq(fit90, type = 1)
@@ -417,6 +450,8 @@ fit95 <- aov(`95%` ~ sample_size + proportionExplained + polytomous + num_items 
                sample_size : polytomous +
                sample_size : num_items +
                sample_size : `norming method` +
+               sample_size : `var true change` +
+               sample_size : Rho_preD +
                Error(`Cell No.`/`norming method`), data=IPR_FINALData)
 summary(fit95)
 eta95 <- EtaSq(fit95, type = 1)
@@ -426,13 +461,15 @@ fit99 <- aov(`99%` ~ sample_size + proportionExplained + polytomous + num_items 
                sample_size : polytomous +
                sample_size : num_items +
                sample_size : `norming method` +
+               sample_size : `var true change` +
+               sample_size : Rho_preD +
                Error(`Cell No.`/`norming method`), data=IPR_FINALData)
 summary(fit99)
 eta99 <- EtaSq(fit99, type = 1)
 
 etamatrix <- cbind(eta1[,2], eta5[, 2], eta10[, 2], eta25[, 2], eta50[, 2], eta75[, 2], eta90[, 2], eta95[, 2], eta99[, 2])
 colnames(etamatrix) <- c("1%", "5%", "10%", "25%", "50%", "75%", "90%", "95%", "99%")
-write.table(etamatrix, file = 'D:\\Dropbox\\Tilburg office\\Research Individual change\\Project 2 - norming change\\0submissionAssessment\\1ReviseResubmit\\etamatrix.txt', sep = ',')
+write.table(etamatrix, file = 'etamatrix.txt', sep = ',')
 
 
 
