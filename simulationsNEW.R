@@ -1,30 +1,31 @@
 ###################################################
 ####### simulation: Norming change scores #########
 #######                                   #########
-#######       Last update: 02/08/2018     #########
+#######       Last update: 12/02/2019     #########
 ###################################################
 
 library(foreach)
 library(psychometric)
 library(doSNOW)
 library(doRNG)
-
+library(Kendall)
 
 #########NEW Parameters that need to be adjusted manually (for 1st revision at Assessment) ################
-var_D <- 1.14 # .14 or 1.14  
-rho_preD <- .1 # 0, .1, -.1
+var_D <- 0.14 # .14 or 1.14   #variance of change 
+rho_preD <- 0 # 0, .1, -.1    #correlation between theta_pre and theta_D
 #######################################################################################################
 
 tmp=proc.time()
 
 
-set.seed(112) # set seed
-sample_sizeV = c(100, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 5000, 6000, 7000, 8000, 9000, 10000)  #sample size 
-beta_pre <- rho_preD*sqrt(var_D)    #see Equation (15) in the article
+set.seed(1) # set seed
+sample_sizeV = seq(100, 1500, by = 100)  #sample size 
+beta_pre <- rho_preD*sqrt(var_D)    #see Equation (19) in the article
 propEV <- c((.065-rho_preD^2)*var_D/2, (.13-rho_preD^2)*var_D/2, (.26-rho_preD^2)*var_D/2)  # proportion of explained by each X1 and X2 (excluding theta_pre).
                                                                                             # R^2=.065: small effect; = .13: medium effect; =.26: large effect.
-polytomousV <- c(TRUE, FALSE)  # if true, simulate polytomous response data 
-num_itemsV <- c(10, 20, 40) # 10, 20, and 40
+                                                                                            # check Appendix C and Equation (19)
+polytomousV <- c(1, 0)  # if 1, simulate polytomous response data 
+num_itemsV <- c(10, 20, 40) 
 
 
 
@@ -66,33 +67,28 @@ GRM_sim <- function(ability, itempar){
   return(list(response, true_response))
 }
 
+############## interprecentile range #########################
+calculate_IPR <- function(vec_data){
+  result <- quantile(vec_data, c(.025, .975))
+  IPR <- result[2] - result[1]
+}
+##############################################################
+
+
 ########################################################
 #######                                   ##############
 #######     Now starts the simulation     ##############
 #######                                   ##############
 ########################################################
 
-num_conditions <- length(sample_sizeV) * length(propEV) * length(polytomousV) * length(num_itemsV)
-conditions <- list()
 
-p <- 1
-for(i in 1:length(sample_sizeV)){
-  for(j in 1:length(propEV)){
-    for(k in 1:length(polytomousV)){
-      for(l in 1:length(num_itemsV)){
-        conditions[[p]] <- c(sample_sizeV[i], propEV[j], polytomousV[k], num_itemsV[l])
-        p <- p+1
-      }
-    }
-  }
-}
+df <- expand.grid(sample_sizeV, propEV, polytomousV, num_itemsV)
 
-df <- data.frame(matrix(unlist(conditions), nrow=num_conditions, byrow = T))
 colnames(df) <- c("sample_size", "proportionExplained", "polytomous", "num_items")
 
 #results_responseD <- list() dont need it anymore
-item_par <- list()
-
+#item_par <- list()  # do not save this anymore
+fresultMat <- matrix(NA, nrow(df), 31)
 num_test <- 1
 while(num_test <= nrow(df)){
 
@@ -123,8 +119,8 @@ while(num_test <= nrow(df)){
   
   #item_par[[num_test]] <- itempar #we dont save this anymore
   
-  beta1 <- sqrt(propE / .25)  # For X1, dichotomous
-  beta2 <- sqrt(propE * 12 / (12 - 4)^2)    # For X2. continuous, uniform
+  beta1 <- sqrt(propE / .25)  # For X1, dichotomous; see Appendix C
+  beta2 <- sqrt(propE * 12 / (12 - 4)^2)    # For X2. continuous, uniform; see Appendix C
   
   # 1. simulate person parameters
   
@@ -136,14 +132,16 @@ while(num_test <= nrow(df)){
   
   theta_pre <- rnorm(sample_size, 0, 1)
   
-  if(propE== (.065-rho_preD^2)*var_D/2){
+  if(propE== (.065-rho_preD^2)*var_D/2){   #propEV <- c((.065-rho_preD^2)*var_D/2, (.13-rho_preD^2)*var_D/2, (.26-rho_preD^2)*var_D/2)
     var_Z <- var_D * (1 - 0.065)
   }else if(propE == (.13-rho_preD^2)*var_D/2){
     var_Z <- var_D * (1 - 0.13)
   }else if (propE == (.26-rho_preD^2)*var_D/2){
     var_Z <- var_D * (1 - 0.26)
   }
-  theta_D <- beta1 * X1 + beta2 * X2 + beta_pre * theta_pre + rnorm(sample_size, .75, sqrt(var_Z)) # notice that beta_0 = .75 is included when we generate Z
+  
+  vector_of_Z <- rnorm(sample_size, .75, sqrt(var_Z))  #need to record this
+  theta_D <- beta1 * X1 + beta2 * X2 + beta_pre * theta_pre + vector_of_Z # notice that beta_0 = .75 is included when we generate Z
   theta_post <- theta_pre + theta_D
   
   
@@ -160,7 +158,7 @@ while(num_test <= nrow(df)){
   registerDoSNOW(cl)
 
   #note that set.seed() and %dorng% ensure that parallel computing generates reproducable results.
-  sim_result <- foreach(i = 1:1000, .combine='cbind') %dorng% {
+  sim_result <- foreach(i = 1:1000, .combine='rbind') %dorng% {
     
     ###################### Simulate response data #######################
     
@@ -175,38 +173,72 @@ while(num_test <= nrow(df)){
     
     sum_pre <- rowSums(X_pre)
     sum_post <- rowSums(X_post)
-    
-    Difference_item <- X_post - X_pre
     Difference_sumscores <- sum_post - sum_pre
-    change_rel <- psychometric::alpha(Difference_item)
+    
     var_1 <- var(sum_pre)
     var_2 <- var(sum_post)
     cor_12 <- cor(sum_pre, sum_post)
+    change_rel <- (psychometric::alpha(X_pre)*var_1 + psychometric::alpha(X_post)*var_2 - 2*cor_12*sqrt(var_1*var_2))/(var_1 + var_2 - 2*cor_12*sqrt(var_1*var_2))
     cor_preD <- cor(sum_pre, Difference_sumscores)  #correlation between observed pretest and observed change
       
-    final_sim <- list()
-    list_sum <- cbind(sum_pre, sum_post) 
     Rel_ect <- c(change_rel, var_1, var_2, cor_12, cor_preD )
     
-    final_sim[[1]] <- list_sum
-    final_sim[[2]] <- Rel_ect
+    
+    ####### regression-based change approach, comparable to T-Scores
+    fit <- lm(Difference_sumscores ~ sum_pre + X1 + X2)
+    coef_regbased <- summary(fit)$coefficients[c(2,4), 1]    #no need to record coefficients
+    Escore <- Difference_sumscores - predict(fit) #residual
+    SD_e <- sqrt(sum(Escore^2)/(length(Escore) - 4))  #K+2 = 4
+    Zscore <- Escore/SD_e
+    qZ <- quantile(Zscore, c(.01, .05, .1, .25, .50, .75, .90, .95, .99))
+    
+    ####### T-scores
+    fit2 <- lm(sum_post ~ sum_pre + X1 + X2)
+    #coef_Tscore <- summary(fit2)$coefficients[c(2, 3, 4), 1]
+    Escore2 <-  sum_post - predict(fit2)
+    SD_e2 <- sqrt(sum(Escore2^2)/(length(Escore2) - 4))
+    Tscore <- Escore2/SD_e2
+    qTZ <- quantile(Tscore, c(.01, .05, .1, .25, .50, .75, .90, .95, .99))  #note, i call it qTZ because in this case, the quantiles here are equal to the regression-based approach including Xpre
+    
+    TZ_same <- round(Zscore, digits = 3) == round(Tscore, digits = 3)   #this is trivial: I expect it to be true, both methods include Xpre. 
+    ### rank correlations, T-score and vector of Z
+    rank_cor_ZT <- Kendall::Kendall(vector_of_Z, Tscore)$tau[1]
+    
+    ####### extra, if regression-based change approach does not include X_pre
+    fit3 <- lm(Difference_sumscores ~  X1 + X2)
+    Escore3 <- Difference_sumscores - predict(fit3) #residual
+    SD_e <- sqrt(sum(Escore3^2)/(length(Escore3) - 3))  #X_pre is removed K+2 = 3 now
+    Zscore_noXpre <- Escore3/SD_e
+    qZ_noXpre <- quantile(Zscore_noXpre, c(.01, .05, .1, .25, .50, .75, .90, .95, .99))
+    rank_cor_ZregNoXpre <- Kendall::Kendall(vector_of_Z, Zscore_noXpre)$tau[1]
+    rank_cor_TandregNoXpre <- Kendall::Kendall(Tscore, Zscore_noXpre)$tau[1]
+  
+    final_sim <- c(Rel_ect, qTZ, rank_cor_ZT, qZ_noXpre, rank_cor_ZregNoXpre, rank_cor_TandregNoXpre, TZ_same)
     
     return(final_sim)
   }
 
   stopCluster(cl)
   
-  #calculate residual true change
-  fit <- lm(theta_post ~ X1 + X2 + theta_pre)
-  res_trueTheta <- theta_post - predict(fit) #residual
+  colnames(sim_result) <- c("change_rel", "var_1", "var_2", "cor_12", "cor_preD", 
+                            "qTZ1%", "qTZ5%", "qTZ10%", "qTZ25%", "qTZ50%", "qTZ75%", "qTZ90%", "qTZ95%", "qTZ99%",
+                            "rank_cor_ZvecT",
+                            "qZ_noXpre1%", "qZ_noXpre5%", "qZ_noXpre10%", "qZ_noXpre25%", "qZ_noXpre50%", "qZ_noXpre75%", "qZ_noXpre90%", "qZ_noXpre95%", "qZ_noXpre99%",
+                            "rank_cor_ZvecregNoXpre", "rank_cor_TandregNoXpre", "TZ_same")
   
-  filename <- paste("results_", num_test, ".RData", sep = "")
-  save(X1, X2, theta_D, res_trueTheta, sim_result, file = filename)
-  #beta_paramter <- paste("beta_", num_test, ".RData", sep = "")
-  #save(beta_pre, beta1, beta2, file = beta_paramter)
+  column_meansANDipr <- colMeans(sim_result)
+  IPR_qTZ <- apply(sim_result[,6:14], 2, calculate_IPR)
+  column_meansANDipr[6:14]<- IPR_qTZ
+  IPR_qZ_noXpre <- apply(sim_result[,16:24], 2, calculate_IPR)
+  column_meansANDipr[16:24]<- IPR_qZ_noXpre
+  
+  fresultMat[num_test,] <- c(df[num_test,], column_meansANDipr)
+  
   num_test <- num_test + 1 
 }
 
+filename <- paste("var_D_", var_D,"_rho_preD_",rho_preD, ".RData", sep = "")
+save(fresultMat, file = filename)
 
 proc.time()-tmp
 
