@@ -11,7 +11,7 @@ library(doRNG)
 library(Kendall)
 
 #########NEW Parameters that need to be adjusted manually (for 1st revision at Assessment) ################
-var_D <- 0.14 # .14 or 1.14   #variance of change 
+var_D <- 1.14 # .14 or 1.14   #variance of change 
 rho_preD <- 0 # 0, .1, -.1    #correlation between theta_pre and theta_D
 #######################################################################################################
 
@@ -88,10 +88,11 @@ colnames(df) <- c("sample_size", "proportionExplained", "polytomous", "num_items
 
 #results_responseD <- list() dont need it anymore
 #item_par <- list()  # do not save this anymore
-fresultMat <- matrix(NA, nrow(df), 31)
+fresultMat <- matrix(NA, nrow(df), 27)
 num_test <- 1
 while(num_test <= nrow(df)){
 
+  print(num_test)
   
   sample_size <- df[num_test, 1]
   propE <- df[num_test, 2]
@@ -220,11 +221,11 @@ while(num_test <= nrow(df)){
 
   stopCluster(cl)
   
-  colnames(sim_result) <- c("change_rel", "var_1", "var_2", "cor_12", "cor_preD", 
-                            "qTZ1%", "qTZ5%", "qTZ10%", "qTZ25%", "qTZ50%", "qTZ75%", "qTZ90%", "qTZ95%", "qTZ99%",
-                            "rank_cor_ZvecT",
-                            "qZ_noXpre1%", "qZ_noXpre5%", "qZ_noXpre10%", "qZ_noXpre25%", "qZ_noXpre50%", "qZ_noXpre75%", "qZ_noXpre90%", "qZ_noXpre95%", "qZ_noXpre99%",
-                            "rank_cor_ZvecregNoXpre", "rank_cor_TandregNoXpre", "TZ_same")
+  #colnames(sim_result) <- c("change_rel", "var_1", "var_2", "cor_12", "cor_preD", 
+                           # "qTZ1%", "qTZ5%", "qTZ10%", "qTZ25%", "qTZ50%", "qTZ75%", "qTZ90%", "qTZ95%", "qTZ99%",
+                           # "rank_cor_ZvecT",
+                           # "qZ_noXpre1%", "qZ_noXpre5%", "qZ_noXpre10%", "qZ_noXpre25%", "qZ_noXpre50%", "qZ_noXpre75%", "qZ_noXpre90%", "qZ_noXpre95%", "qZ_noXpre99%",
+                           # "rank_cor_ZvecregNoXpre", "rank_cor_TandregNoXpre", "TZ_same")
   
   column_meansANDipr <- colMeans(sim_result)
   IPR_qTZ <- apply(sim_result[,6:14], 2, calculate_IPR)
@@ -232,11 +233,16 @@ while(num_test <= nrow(df)){
   IPR_qZ_noXpre <- apply(sim_result[,16:24], 2, calculate_IPR)
   column_meansANDipr[16:24]<- IPR_qZ_noXpre
   
-  fresultMat[num_test,] <- c(df[num_test,], column_meansANDipr)
+  fresultMat[num_test,] <- column_meansANDipr
   
   num_test <- num_test + 1 
 }
 
+colnames(fresultMat) <- c("change_rel", "var_1", "var_2", "cor_12", "cor_preD", 
+                          "qTZ1%", "qTZ5%", "qTZ10%", "qTZ25%", "qTZ50%", "qTZ75%", "qTZ90%", "qTZ95%", "qTZ99%",
+                          "rank_cor_ZvecT",
+                          "qZ_noXpre1%", "qZ_noXpre5%", "qZ_noXpre10%", "qZ_noXpre25%", "qZ_noXpre50%", "qZ_noXpre75%", "qZ_noXpre90%", "qZ_noXpre95%", "qZ_noXpre99%",
+                          "rank_cor_ZvecregNoXpre", "rank_cor_TandregNoXpre", "TZ_same")
 filename <- paste("var_D_", var_D,"_rho_preD_",rho_preD, ".RData", sep = "")
 save(fresultMat, file = filename)
 
