@@ -200,7 +200,7 @@ while(num_test <= nrow(df)){
     Tscore <- Escore2/SD_e2
     qTZ <- quantile(Tscore, c(.01, .05, .1, .25, .50, .75, .90, .95, .99))  #note, i call it qTZ because in this case, the quantiles here are equal to the regression-based approach including Xpre
     
-    TZ_same <- round(Zscore, digits = 3) == round(Tscore, digits = 3)   #this is trivial: I expect it to be true, both methods include Xpre. 
+    TZ_same <- mean(round(Zscore, digits = 3) == round(Tscore, digits = 3))   #this is trivial: I expect it to be true, both methods include Xpre. Therefore TZ_same == 1
     ### rank correlations, T-score and vector of Z
     rank_cor_ZT <- Kendall::Kendall(vector_of_Z, Tscore)$tau[1]
     
