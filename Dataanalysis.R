@@ -7,6 +7,7 @@
 ##############################################################
 
 library(ggplot2)
+library(rms)
 ############ 0. Some preparations ############################
 # a) set the working directory to the folder containing the .RData files
 filenames <- list.files(path = ".", pattern = "var_D")
@@ -163,3 +164,53 @@ p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$sample_size, y=FINAL_IPR$`qTZ99%`)) +
        x ="N", y = "IPR")+
   ylim(0,1); p
 
+
+################  # ANOVAs
+Data_4ANOVA <- FINALmat[, c(1:6, 12:20)]
+
+summary(Data_4ANOVA)  #design factors need to be coded as factors (categorical)
+Data_4ANOVA$var_D <- factor(Data_4ANOVA$var_D, levels = c(0.14, 1.14))
+Data_4ANOVA$rho_preD <- factor(Data_4ANOVA$rho_preD, levels = c(-0.1, 0, 0.1))
+#Data_4ANOVA$sample_size <- factor(Data_4ANOVA$sample_size, levels = seq(100, 1500, by = 100))
+Data_4ANOVA$proportionExplained <- factor(Data_4ANOVA$proportionExplained, levels = c(0.065, 0.13, 0.26))
+Data_4ANOVA$polytomous <- factor(Data_4ANOVA$polytomous, levels = c(0, 1))
+Data_4ANOVA$num_items <- factor(Data_4ANOVA$num_items, levels = c(10, 20, 40))
+
+Data_4ANOVA <- cbind(seq(1620), Data_4ANOVA)
+#colnames(Data_4ANOVA)[1] <- 'celNo'  #no need for this
+
+model1 = ols(log(`qTZ1%`) ~ var_D + rho_preD + proportionExplained + polytomous + num_items + sample_size, data = Data_4ANOVA, x=TRUE)    #use the suggestion from https://stats.stackexchange.com/questions/76904/robust-regression-inference-and-sandwich-estimators
+result <- robcov(model1)
+qqnorm(Data_4ANOVA$`qTZ1%` - result1$residuals)  #plot is quite good
+
+model5 = ols(log(`qTZ5%`) ~ var_D + rho_preD + proportionExplained + polytomous + num_items + sample_size, data = Data_4ANOVA, x=TRUE)    #use the suggestion from https://stats.stackexchange.com/questions/76904/robust-regression-inference-and-sandwich-estimators
+result5 <- robcov(model5)
+qqnorm(Data_4ANOVA$`qTZ5%` - result5$residuals)  #normality seems to be ok
+
+model10 = ols(log(`qTZ10%`) ~ var_D + rho_preD + proportionExplained + polytomous + num_items + sample_size, data = Data_4ANOVA, x=TRUE)    #use the suggestion from https://stats.stackexchange.com/questions/76904/robust-regression-inference-and-sandwich-estimators
+result10 <- robcov(model10)
+qqnorm(Data_4ANOVA$`qTZ10%` - result10$residuals) # plot is quite good
+
+model25 = ols(log(`qTZ25%`) ~ var_D + rho_preD + proportionExplained + polytomous + num_items + sample_size, data = Data_4ANOVA, x=TRUE)    #use the suggestion from https://stats.stackexchange.com/questions/76904/robust-regression-inference-and-sandwich-estimators
+result25 <- robcov(model25)
+qqnorm(Data_4ANOVA$`qTZ25%` - result25$residuals) # plot is quite good
+
+model50 = ols(log(`qTZ50%`) ~ var_D + rho_preD + proportionExplained + polytomous + num_items + sample_size, data = Data_4ANOVA, x=TRUE)    #use the suggestion from https://stats.stackexchange.com/questions/76904/robust-regression-inference-and-sandwich-estimators
+result50 <- robcov(model50)
+qqnorm(Data_4ANOVA$`qTZ50%` - result50$residuals) # plot is quite good
+
+model75 = ols(log(`qTZ75%`) ~ var_D + rho_preD + proportionExplained + polytomous + num_items + sample_size, data = Data_4ANOVA, x=TRUE)    #use the suggestion from https://stats.stackexchange.com/questions/76904/robust-regression-inference-and-sandwich-estimators
+result75 <- robcov(model75)
+qqnorm(Data_4ANOVA$`qTZ75%` - result75$residuals) # plot seems to be ok
+
+model90 = ols(log(`qTZ90%`) ~ var_D + rho_preD + proportionExplained + polytomous + num_items + sample_size, data = Data_4ANOVA, x=TRUE)    #use the suggestion from https://stats.stackexchange.com/questions/76904/robust-regression-inference-and-sandwich-estimators
+result90 <- robcov(model90)
+qqnorm(Data_4ANOVA$`qTZ90%` - result90$residuals) # plot seems to be ok
+
+model95 = ols(log(`qTZ95%`) ~ var_D + rho_preD + proportionExplained + polytomous + num_items + sample_size, data = Data_4ANOVA, x=TRUE)    #use the suggestion from https://stats.stackexchange.com/questions/76904/robust-regression-inference-and-sandwich-estimators
+result95 <- robcov(model95)
+qqnorm(Data_4ANOVA$`qTZ95%` - result95$residuals) # plot seems to be ok
+
+model99 = ols(log(`qTZ99%`) ~ var_D + rho_preD + proportionExplained + polytomous + num_items + sample_size, data = Data_4ANOVA, x=TRUE)    #use the suggestion from https://stats.stackexchange.com/questions/76904/robust-regression-inference-and-sandwich-estimators
+result99 <- robcov(model99)
+qqnorm(Data_4ANOVA$`qTZ99%` - result99$residuals) # plot does not looks good. But we do not deal with this issue further, because if we change the model for 99% percentile, then we have to also use the same model for the other percentiles. 
