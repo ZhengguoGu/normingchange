@@ -176,11 +176,11 @@ Data_4ANOVA$proportionExplained <- factor(Data_4ANOVA$proportionExplained, level
 Data_4ANOVA$polytomous <- factor(Data_4ANOVA$polytomous, levels = c(0, 1))
 Data_4ANOVA$num_items <- factor(Data_4ANOVA$num_items, levels = c(10, 20, 40))
 
-Data_4ANOVA <- cbind(seq(1620), Data_4ANOVA)
+#Data_4ANOVA <- cbind(seq(1620), Data_4ANOVA)
 #colnames(Data_4ANOVA)[1] <- 'celNo'  #no need for this
 
 model1 = ols(log(`qTZ1%`) ~ var_D + rho_preD + proportionExplained + polytomous + num_items + sample_size, data = Data_4ANOVA, x=TRUE)    #use the suggestion from https://stats.stackexchange.com/questions/76904/robust-regression-inference-and-sandwich-estimators
-result <- robcov(model1)
+result1 <- robcov(model1)
 qqnorm(Data_4ANOVA$`qTZ1%` - result1$residuals)  #plot is quite good
 
 model5 = ols(log(`qTZ5%`) ~ var_D + rho_preD + proportionExplained + polytomous + num_items + sample_size, data = Data_4ANOVA, x=TRUE)    #use the suggestion from https://stats.stackexchange.com/questions/76904/robust-regression-inference-and-sandwich-estimators
