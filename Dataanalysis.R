@@ -45,56 +45,76 @@ summary(FINALmat)
 FINALmat$proportionExplained <- FINALmat$proportionExplained * 2 /FINALmat$var_D + (FINALmat$rho_preD)^2  #transform proportionExplained back to effect sizes
 
 
-############ 1. Tables: Rank correlations, using N=1000 as an example ####################
+############ 1a. Table: Rank correlations, using N=1000 as an example ####################
 colnames(FINALmat)
 FINAL_rank_1000 <- FINALmat[FINALmat$sample_size==1000, c(1:11, 21, 31:32)]
 
 #test length 
-round(colMeans(FINAL_rank_1000[FINAL_rank_1000$num_items==10,]), digits = 2)
-round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==10,], MARGIN = 2, sd), digits = 2)
+#round(colMeans(FINAL_rank_1000[FINAL_rank_1000$num_items==10,]), digits = 2)  #cann't use it the distribution is highly skewed.But I keep it here.
+round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==10,], MARGIN = 2, median), digits = 2)
 
-round(colMeans(FINAL_rank_1000[FINAL_rank_1000$num_items==20,]), digits = 2)
-round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==20,], MARGIN = 2, sd), digits = 2)
+#round(colMeans(FINAL_rank_1000[FINAL_rank_1000$num_items==20,]), digits = 2)
+round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==20,], MARGIN = 2, median), digits = 2)
 
-round(colMeans(FINAL_rank_1000[FINAL_rank_1000$num_items==40,]), digits = 2)
-round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==40,], MARGIN = 2, sd), digits = 2)
+#round(colMeans(FINAL_rank_1000[FINAL_rank_1000$num_items==40,]), digits = 2)
+round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==40,], MARGIN = 2, median), digits = 2)
 
 # #item scores
-round(colMeans(FINAL_rank_1000[FINAL_rank_1000$polytomous==0,]), digits = 2) #dichotomous
-round(apply(FINAL_rank_1000[FINAL_rank_1000$polytomous==0,], MARGIN = 2, sd), digits = 2)
+#round(colMeans(FINAL_rank_1000[FINAL_rank_1000$polytomous==0,]), digits = 2) #dichotomous
+round(apply(FINAL_rank_1000[FINAL_rank_1000$polytomous==0,], MARGIN = 2, median), digits = 2)
 
-round(colMeans(FINAL_rank_1000[FINAL_rank_1000$polytomous==1,]), digits = 2)
-round(apply(FINAL_rank_1000[FINAL_rank_1000$polytomous==1,], MARGIN = 2, sd), digits = 2)
+#round(colMeans(FINAL_rank_1000[FINAL_rank_1000$polytomous==1,]), digits = 2)
+round(apply(FINAL_rank_1000[FINAL_rank_1000$polytomous==1,], MARGIN = 2, median), digits = 2)
 
 #effect size of covariates
-round(colMeans(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .065,]), digits = 2)
-round(apply(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .065,], MARGIN = 2, sd), digits = 2)
+#round(colMeans(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .065,]), digits = 2)
+round(apply(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .065,], MARGIN = 2, median), digits = 2)
 
-round(colMeans(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .13,]), digits = 2)
-round(apply(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .13,], MARGIN = 2, sd), digits = 2)
+#round(colMeans(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .13,]), digits = 2)
+round(apply(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .13,], MARGIN = 2, median), digits = 2)
 
-round(colMeans(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .26,]), digits = 2)
-round(apply(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .26,], MARGIN = 2, sd), digits = 2)
+#round(colMeans(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .26,]), digits = 2)
+round(apply(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .26,], MARGIN = 2, median), digits = 2)
 
 #Pupulation correlation between pretest and change
-round(colMeans(FINAL_rank_1000[FINAL_rank_1000$rho_preD==0,]), digits = 2)
-round(apply(FINAL_rank_1000[FINAL_rank_1000$rho_preD==0,], MARGIN = 2, sd), digits = 2)
+#round(colMeans(FINAL_rank_1000[FINAL_rank_1000$rho_preD==0,]), digits = 2)
+round(apply(FINAL_rank_1000[FINAL_rank_1000$rho_preD==0,], MARGIN = 2, median), digits = 2)
 
-round(colMeans(FINAL_rank_1000[FINAL_rank_1000$rho_preD==0.1,]), digits = 2)
-round(apply(FINAL_rank_1000[FINAL_rank_1000$rho_preD==0.1,], MARGIN = 2, sd), digits = 2)
+#round(colMeans(FINAL_rank_1000[FINAL_rank_1000$rho_preD==0.1,]), digits = 2)
+round(apply(FINAL_rank_1000[FINAL_rank_1000$rho_preD==0.1,], MARGIN = 2, median), digits = 2)
 
-round(colMeans(FINAL_rank_1000[FINAL_rank_1000$rho_preD==-0.1,]), digits = 2)
-round(apply(FINAL_rank_1000[FINAL_rank_1000$rho_preD==-0.1,], MARGIN = 2, sd), digits = 2)
+#round(colMeans(FINAL_rank_1000[FINAL_rank_1000$rho_preD==-0.1,]), digits = 2)
+round(apply(FINAL_rank_1000[FINAL_rank_1000$rho_preD==-0.1,], MARGIN = 2, median), digits = 2)
 
 #Variance of theta-change
-round(colMeans(FINAL_rank_1000[FINAL_rank_1000$var_D ==.14,]), digits = 2)
-round(apply(FINAL_rank_1000[FINAL_rank_1000$var_D ==.14,], MARGIN = 2, sd), digits = 2)
+#round(colMeans(FINAL_rank_1000[FINAL_rank_1000$var_D ==.14,]), digits = 2)
+round(apply(FINAL_rank_1000[FINAL_rank_1000$var_D ==.14,], MARGIN = 2, median), digits = 2)
 
-round(colMeans(FINAL_rank_1000[FINAL_rank_1000$var_D ==1.14,]), digits = 2)
-round(apply(FINAL_rank_1000[FINAL_rank_1000$var_D ==1.14,], MARGIN = 2, sd), digits = 2)
+#round(colMeans(FINAL_rank_1000[FINAL_rank_1000$var_D ==1.14,]), digits = 2)
+round(apply(FINAL_rank_1000[FINAL_rank_1000$var_D ==1.14,], MARGIN = 2, median), digits = 2)
 
 
-############### 2. IPR plots: IPR using Equation 4a and Tscores   #############################################################
+############### 1b. plot: rank correlation vs. sample size
+# Rank correlation generated by Equation (4a) (and thus, also T Scores)
+FINAL_rank_forplot <- FINALmat[, c(1:6, 21)]
+FINAL_rank_forplot$sample_size <- as.factor(FINAL_rank_forplot$sample_size)
+p <- ggplot(FINAL_rank_forplot, aes(x=FINAL_rank_forplot$sample_size, y=FINAL_rank_forplot$rank_cor_ZvecT)) + 
+  geom_boxplot( color="black")+
+  theme(text = element_text(size=20),axis.text.x = element_text(angle=90, hjust=1), axis.line = element_line(colour = "black")) +
+  labs(x ="N", y = "Rank Correlation") +
+  ylim(0,1) ; 
+p 
+# Rank correlation generated by Equation (4b)
+FINAL_rank_forplot <- FINALmat[, c(1:6, 31)]
+FINAL_rank_forplot$sample_size <- as.factor(FINAL_rank_forplot$sample_size)
+p <- ggplot(FINAL_rank_forplot, aes(x=FINAL_rank_forplot$sample_size, y=FINAL_rank_forplot$rank_cor_ZvecregNoXpre)) + 
+  geom_boxplot( color="black")+
+  theme(text = element_text(size=20),axis.text.x = element_text(angle=90, hjust=1), axis.line = element_line(colour = "black")) +
+  labs(x ="N", y = "Rank Correlation") +
+  ylim(0,1) ; 
+p 
+
+############### 2a. IPR plots: IPR using Equation 4a and Tscores   #############################################################
 
 colnames(FINALmat)
 FINAL_IPR <- FINALmat[, c(1:6, 12:20)]  
@@ -165,56 +185,26 @@ p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$sample_size, y=FINAL_IPR$`qTZ99%`)) +
   ylim(0,1); p
 
 
-################  # ANOVAs for IPR generated by Equation (4a) and T-scores
-Data_4ANOVA <- FINALmat[FINALmat$sample_size==1000, c(1:6, 12:20)]
+################## 2b. more IPR box plots. because ANOVAs are not suitable (assumptions are violated.)
+### variance of theta change
+colnames(FINALmat)
+FINAL_IPR <- FINALmat[, c(1:6, 12:20)]  
+FINAL_IPR$var_D <- as.factor(FINAL_IPR$var_D)
 
-Data_4ANOVA$var_D <- factor(Data_4ANOVA$var_D, levels = c(0.14, 1.14))
-Data_4ANOVA$rho_preD <- factor(Data_4ANOVA$rho_preD, levels = c(-0.1, 0, 0.1))
-#Data_4ANOVA$sample_size <- factor(Data_4ANOVA$sample_size, levels = seq(100, 1500, by = 100))
-Data_4ANOVA$proportionExplained <- factor(Data_4ANOVA$proportionExplained, levels = c(0.065, 0.13, 0.26))
-Data_4ANOVA$polytomous <- factor(Data_4ANOVA$polytomous, levels = c(0, 1))
-Data_4ANOVA$num_items <- factor(Data_4ANOVA$num_items, levels = c(10, 20, 40))
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ1%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="1st percentile",
+       x ="N", y = "IPR") +
+  ylim(0,1.2) ; p
 
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ5%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="5th percentile",
+       x ="N", y = "IPR") +
+  ylim(0,1.2) ; p
 
-model1 = ols(log(`qTZ1%`) ~ var_D + rho_preD + proportionExplained + polytomous + num_items, data = Data_4ANOVA, x=TRUE)    #use the suggestion from https://stats.stackexchange.com/questions/76904/robust-regression-inference-and-sandwich-estimators
-result1 <- robcov(model1)
-qqnorm(Data_4ANOVA$`qTZ1%` - result1$residuals)  #plot is quite ok
-
-model5 = ols(log(`qTZ5%`) ~ var_D + rho_preD + proportionExplained + polytomous + num_items , data = Data_4ANOVA, x=TRUE)    #use the suggestion from https://stats.stackexchange.com/questions/76904/robust-regression-inference-and-sandwich-estimators
-result5 <- robcov(model5)
-qqnorm(Data_4ANOVA$`qTZ5%` - result5$residuals)  #normality seems to be ok
-
-model10 = ols(log(`qTZ10%`) ~ var_D + rho_preD + proportionExplained + polytomous + num_items, data = Data_4ANOVA, x=TRUE)    #use the suggestion from https://stats.stackexchange.com/questions/76904/robust-regression-inference-and-sandwich-estimators
-result10 <- robcov(model10)
-qqnorm(Data_4ANOVA$`qTZ10%` - result10$residuals) # plot is quite ok
-
-model25 = ols(log(`qTZ25%`) ~ var_D + rho_preD + proportionExplained + polytomous + num_items, data = Data_4ANOVA, x=TRUE)    #use the suggestion from https://stats.stackexchange.com/questions/76904/robust-regression-inference-and-sandwich-estimators
-result25 <- robcov(model25)
-qqnorm(Data_4ANOVA$`qTZ25%` - result25$residuals) # plot is quite ok
-
-model50 = ols(log(`qTZ50%`) ~ var_D + rho_preD + proportionExplained + polytomous + num_items, data = Data_4ANOVA, x=TRUE)    #use the suggestion from https://stats.stackexchange.com/questions/76904/robust-regression-inference-and-sandwich-estimators
-result50 <- robcov(model50)
-qqnorm(Data_4ANOVA$`qTZ50%` - result50$residuals) # plot is quite good
-
-model75 = ols(log(`qTZ75%`) ~ var_D + rho_preD + proportionExplained + polytomous + num_items, data = Data_4ANOVA, x=TRUE)    #use the suggestion from https://stats.stackexchange.com/questions/76904/robust-regression-inference-and-sandwich-estimators
-result75 <- robcov(model75)
-qqnorm(Data_4ANOVA$`qTZ75%` - result75$residuals) # plot is quite good
-
-model90 = ols(log(`qTZ90%`) ~ var_D + rho_preD + proportionExplained + polytomous + num_items, data = Data_4ANOVA, x=TRUE)    #use the suggestion from https://stats.stackexchange.com/questions/76904/robust-regression-inference-and-sandwich-estimators
-result90 <- robcov(model90)
-qqnorm(Data_4ANOVA$`qTZ90%` - result90$residuals) # plot is quite good
-
-model95 = ols(log(`qTZ95%`) ~ var_D + rho_preD + proportionExplained + polytomous + num_items, data = Data_4ANOVA, x=TRUE)    #use the suggestion from https://stats.stackexchange.com/questions/76904/robust-regression-inference-and-sandwich-estimators
-result95 <- robcov(model95)
-qqnorm(Data_4ANOVA$`qTZ95%` - result95$residuals) # plot is quite good
-
-model99 = ols(log(`qTZ99%`) ~ var_D + rho_preD + proportionExplained + polytomous + num_items, data = Data_4ANOVA, x=TRUE)    #use the suggestion from https://stats.stackexchange.com/questions/76904/robust-regression-inference-and-sandwich-estimators
-result99 <- robcov(model99)
-qqnorm(Data_4ANOVA$`qTZ99%` - result99$residuals) # plot is quite good
-
-coef_table <- round(cbind(result1$coefficients, result5$coefficients, result10$coefficients, result25$coefficients,
-                    result50$coefficients, result75$coefficients, result90$coefficients, result95$coefficients,
-                    result99$coefficients), digits = 2)
 ######################### END  ##################################
 
 ############### extra! Not in the paper!  #######################################################################
