@@ -186,7 +186,7 @@ p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$sample_size, y=FINAL_IPR$`qTZ99%`)) +
 
 
 ################## 2b. more IPR box plots. because ANOVAs are not suitable (assumptions are violated.)
-### variance of theta change
+### 2b.1 variance of theta change
 colnames(FINALmat)
 FINAL_IPR <- FINALmat[, c(1:6, 12:20)]  
 FINAL_IPR$var_D <- as.factor(FINAL_IPR$var_D)
@@ -205,6 +205,54 @@ p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ5%`)) +
        x ="N", y = "IPR") +
   ylim(0,1.2) ; p
 
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ10%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="10th percentile",
+       x ="N", y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ25%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="25th percentile",
+       x ="N", y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ50%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="50th percentile",
+       x ="N", y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ75%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="75th percentile",
+       x ="N", y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ90%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="90th percentile",
+       x ="N", y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ95%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="95th percentile",
+       x ="N", y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ99%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="99th percentile",
+       x ="N", y = "IPR") +
+  ylim(0,1.2) ; p
 ######################### END  ##################################
 
 ############### extra! Not in the paper!  #######################################################################
