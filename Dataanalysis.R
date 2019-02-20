@@ -195,63 +195,63 @@ p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ1%`)) +
   geom_boxplot(fill='#A4A4A4', color="black")+
   theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
   labs(title="1st percentile",
-       x ="Variance of Theta Change", y = "IPR") +
+       x =expression(paste("Variance of ", theta[D])), y = "IPR") +
   ylim(0,1.2) ; p
 
 p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ5%`)) + 
   geom_boxplot(fill='#A4A4A4', color="black")+
   theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
   labs(title="5th percentile",
-       x ="Variance of Theta Change", y = "IPR") +
+       x =expression(paste("Variance of ", theta[D])), y = "IPR") +
   ylim(0,1.2) ; p
 
 p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ10%`)) + 
   geom_boxplot(fill='#A4A4A4', color="black")+
   theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
   labs(title="10th percentile",
-       x ="Variance of Theta Change", y = "IPR") +
+       x =expression(paste("Variance of ", theta[D])), y = "IPR") +
   ylim(0,1.2) ; p
 
 p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ25%`)) + 
   geom_boxplot(fill='#A4A4A4', color="black")+
   theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
   labs(title="25th percentile",
-       x ="Variance of Theta Change", y = "IPR") +
+       x =expression(paste("Variance of ", theta[D])), y = "IPR") +
   ylim(0,1.2) ; p
 
 p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ50%`)) + 
   geom_boxplot(fill='#A4A4A4', color="black")+
   theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
   labs(title="50th percentile",
-       x ="Variance of Theta Change", y = "IPR") +
+       x =expression(paste("Variance of ", theta[D])), y = "IPR") +
   ylim(0,1.2) ; p
 
 p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ75%`)) + 
   geom_boxplot(fill='#A4A4A4', color="black")+
   theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
   labs(title="75th percentile",
-       x ="Variance of Theta Change", y = "IPR") +
+       x =expression(paste("Variance of ", theta[D])), y = "IPR") +
   ylim(0,1.2) ; p
 
 p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ90%`)) + 
   geom_boxplot(fill='#A4A4A4', color="black")+
   theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
   labs(title="90th percentile",
-       x ="Variance of Theta Change", y = "IPR") +
+       x =expression(paste("Variance of ", theta[D])), y = "IPR") +
   ylim(0,1.2) ; p
 
 p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ95%`)) + 
   geom_boxplot(fill='#A4A4A4', color="black")+
   theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
   labs(title="95th percentile",
-       x ="Variance of Theta Change", y = "IPR") +
+       x =expression(paste("Variance of ", theta[D])), y = "IPR") +
   ylim(0,1.2) ; p
 
 p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ99%`)) + 
   geom_boxplot(fill='#A4A4A4', color="black")+
   theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
   labs(title="99th percentile",
-       x ="Variance of Theta Change", y = "IPR") +
+       x =expression(paste("Variance of ", theta[D])), y = "IPR") +
   ylim(0,1.2) ; p
 
 ### 2b.2 test length  #############################################################################
