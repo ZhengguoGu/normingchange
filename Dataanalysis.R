@@ -185,8 +185,8 @@ p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$sample_size, y=FINAL_IPR$`qTZ99%`)) +
   ylim(0,1); p
 
 
-################## 2b. more IPR box plots. because ANOVAs are not suitable (assumptions are violated.)
-### 2b.1 variance of theta change
+################## 2b. more IPR box plots. because ANOVAs are not suitable (assumptions are violated.)  ###########################################
+### 2b.1 variance of theta change #############################################################################
 colnames(FINALmat)
 FINAL_IPR <- FINALmat[, c(1:6, 12:20)]  
 FINAL_IPR$var_D <- as.factor(FINAL_IPR$var_D)
@@ -195,64 +195,338 @@ p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ1%`)) +
   geom_boxplot(fill='#A4A4A4', color="black")+
   theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
   labs(title="1st percentile",
-       x ="N", y = "IPR") +
+       x ="Variance of Theta Change", y = "IPR") +
   ylim(0,1.2) ; p
 
 p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ5%`)) + 
   geom_boxplot(fill='#A4A4A4', color="black")+
   theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
   labs(title="5th percentile",
-       x ="N", y = "IPR") +
+       x ="Variance of Theta Change", y = "IPR") +
   ylim(0,1.2) ; p
 
 p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ10%`)) + 
   geom_boxplot(fill='#A4A4A4', color="black")+
   theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
   labs(title="10th percentile",
-       x ="N", y = "IPR") +
+       x ="Variance of Theta Change", y = "IPR") +
   ylim(0,1.2) ; p
 
 p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ25%`)) + 
   geom_boxplot(fill='#A4A4A4', color="black")+
   theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
   labs(title="25th percentile",
-       x ="N", y = "IPR") +
+       x ="Variance of Theta Change", y = "IPR") +
   ylim(0,1.2) ; p
 
 p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ50%`)) + 
   geom_boxplot(fill='#A4A4A4', color="black")+
   theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
   labs(title="50th percentile",
-       x ="N", y = "IPR") +
+       x ="Variance of Theta Change", y = "IPR") +
   ylim(0,1.2) ; p
 
 p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ75%`)) + 
   geom_boxplot(fill='#A4A4A4', color="black")+
   theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
   labs(title="75th percentile",
-       x ="N", y = "IPR") +
+       x ="Variance of Theta Change", y = "IPR") +
   ylim(0,1.2) ; p
 
 p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ90%`)) + 
   geom_boxplot(fill='#A4A4A4', color="black")+
   theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
   labs(title="90th percentile",
-       x ="N", y = "IPR") +
+       x ="Variance of Theta Change", y = "IPR") +
   ylim(0,1.2) ; p
 
 p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ95%`)) + 
   geom_boxplot(fill='#A4A4A4', color="black")+
   theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
   labs(title="95th percentile",
-       x ="N", y = "IPR") +
+       x ="Variance of Theta Change", y = "IPR") +
   ylim(0,1.2) ; p
 
 p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$var_D, y=FINAL_IPR$`qTZ99%`)) + 
   geom_boxplot(fill='#A4A4A4', color="black")+
   theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
   labs(title="99th percentile",
-       x ="N", y = "IPR") +
+       x ="Variance of Theta Change", y = "IPR") +
   ylim(0,1.2) ; p
+
+### 2b.2 test length  #############################################################################
+FINAL_IPR$num_items <- as.factor(FINAL_IPR$num_items)
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$num_items, y=FINAL_IPR$`qTZ1%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="1st percentile",
+       x ="Test Length", y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$num_items, y=FINAL_IPR$`qTZ5%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="5th percentile",
+       x ="Test Length", y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$num_items, y=FINAL_IPR$`qTZ10%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="10th percentile",
+       x ="Test Length", y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$num_items, y=FINAL_IPR$`qTZ25%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="25th percentile",
+       x ="Test Length", y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$num_items, y=FINAL_IPR$`qTZ50%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="50th percentile",
+       x ="Test Length", y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$num_items, y=FINAL_IPR$`qTZ75%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="75th percentile",
+       x ="Test Length", y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$num_items, y=FINAL_IPR$`qTZ90%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="90th percentile",
+       x ="Test Length", y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$num_items, y=FINAL_IPR$`qTZ95%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="95th percentile",
+       x ="Test Length", y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$num_items, y=FINAL_IPR$`qTZ99%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="99th percentile",
+       x ="Test Length", y = "IPR") +
+  ylim(0,1.2) ; p
+
+### 2b.3 item scores (dich/poly)  #############################################################################
+FINAL_IPR$polytomous <- as.factor(FINAL_IPR$polytomous)
+New_lables <- c(2, 5)
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$polytomous, y=FINAL_IPR$`qTZ1%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="1st percentile",
+       x ="Number of Item Scores", y = "IPR") +
+  ylim(0,1.2) +
+  scale_x_discrete(labels= New_lables); p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$polytomous, y=FINAL_IPR$`qTZ5%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="5th percentile",
+       x ="Number of Item Scores", y = "IPR") +
+  ylim(0,1.2) +
+  scale_x_discrete(labels= New_lables); p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$polytomous, y=FINAL_IPR$`qTZ10%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="10th percentile",
+       x ="Number of Item Scores", y = "IPR") +
+  ylim(0,1.2) +
+  scale_x_discrete(labels= New_lables); p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$polytomous, y=FINAL_IPR$`qTZ25%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="25th percentile",
+       x ="Number of Item Scores", y = "IPR") +
+  ylim(0,1.2) +
+  scale_x_discrete(labels= New_lables); p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$polytomous, y=FINAL_IPR$`qTZ50%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="50th percentile",
+       x ="Number of Item Scores", y = "IPR") +
+  ylim(0,1.2) +
+  scale_x_discrete(labels= New_lables); p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$polytomous, y=FINAL_IPR$`qTZ75%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="75th percentile",
+       x ="Number of Item Scores", y = "IPR") +
+  ylim(0,1.2) +
+  scale_x_discrete(labels= New_lables); p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$polytomous, y=FINAL_IPR$`qTZ90%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="90th percentile",
+       x ="Number of Item Scores", y = "IPR") +
+  ylim(0,1.2) +
+  scale_x_discrete(labels= New_lables); p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$polytomous, y=FINAL_IPR$`qTZ95%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="95th percentile",
+       x ="Number of Item Scores", y = "IPR") +
+  ylim(0,1.2) +
+  scale_x_discrete(labels= New_lables); p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$polytomous, y=FINAL_IPR$`qTZ99%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="99th percentile",
+       x ="Number of Item Scores", y = "IPR") +
+  ylim(0,1.2) +
+  scale_x_discrete(labels= New_lables); p
+### 2b.4 Effect size of covariates ###########################
+FINAL_IPR$proportionExplained <- as.factor(FINAL_IPR$proportionExplained)
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$proportionExplained, y=FINAL_IPR$`qTZ1%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="1st percentile",
+       x ="Effect Size of Covariates", y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$proportionExplained, y=FINAL_IPR$`qTZ5%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="5th percentile",
+       x ="Effect Size of Covariates", y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$proportionExplained, y=FINAL_IPR$`qTZ10%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="10th percentile",
+       x ="Effect Size of Covariates", y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$proportionExplained, y=FINAL_IPR$`qTZ25%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="25th percentile",
+       x ="Effect Size of Covariates", y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$proportionExplained, y=FINAL_IPR$`qTZ50%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="50th percentile",
+       x ="Effect Size of Covariates", y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$proportionExplained, y=FINAL_IPR$`qTZ75%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="75th percentile",
+       x ="Effect Size of Covariates", y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$proportionExplained, y=FINAL_IPR$`qTZ90%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="90th percentile",
+       x ="Effect Size of Covariates", y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$proportionExplained, y=FINAL_IPR$`qTZ95%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="95th percentile",
+       x ="Effect Size of Covariates", y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$proportionExplained, y=FINAL_IPR$`qTZ99%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="99th percentile",
+       x ="Effect Size of Covariates", y = "IPR") +
+  ylim(0,1.2) ; p
+
+### 2b.5 Correlation between theta_pre and theta_change ###########################
+FINAL_IPR$rho_preD <- as.factor(FINAL_IPR$rho_preD)
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$rho_preD, y=FINAL_IPR$`qTZ1%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="1st percentile",
+       x =expression(paste("Correlation Between ", theta[pre], " and ", theta[D])), y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$rho_preD, y=FINAL_IPR$`qTZ5%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="5th percentile",
+       x =expression(paste("Correlation Between ", theta[pre], " and ", theta[D])), y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$rho_preD, y=FINAL_IPR$`qTZ10%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="10th percentile",
+       x =expression(paste("Correlation Between ", theta[pre], " and ", theta[D])), y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$rho_preD, y=FINAL_IPR$`qTZ25%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="25th percentile",
+       x =expression(paste("Correlation Between ", theta[pre], " and ", theta[D])), y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$rho_preD, y=FINAL_IPR$`qTZ50%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="50th percentile",
+       x =expression(paste("Correlation Between ", theta[pre], " and ", theta[D])), y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$rho_preD, y=FINAL_IPR$`qTZ75%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="75th percentile",
+       x =expression(paste("Correlation Between ", theta[pre], " and ", theta[D])), y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$rho_preD, y=FINAL_IPR$`qTZ90%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="90th percentile",
+       x =expression(paste("Correlation Between ", theta[pre], " and ", theta[D])), y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$rho_preD, y=FINAL_IPR$`qTZ95%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="95th percentile",
+       x =expression(paste("Correlation Between ", theta[pre], " and ", theta[D])), y = "IPR") +
+  ylim(0,1.2) ; p
+
+p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$rho_preD, y=FINAL_IPR$`qTZ99%`)) + 
+  geom_boxplot(fill='#A4A4A4', color="black")+
+  theme(text = element_text(size=20), plot.title = element_text(hjust = 0.5)) +
+  labs(title="99th percentile",
+       x =expression(paste("Correlation Between ", theta[pre], " and ", theta[D])), y = "IPR") +
+  ylim(0,1.2) ; p
+
+
 ######################### END  ##################################
 
 ############### extra! Not in the paper!  #######################################################################
