@@ -2,7 +2,7 @@
 #########                                        #############
 ######### Data Analysis: Norming change scores   #############
 #########                                        #############
-#########       Last update: 12/02/2019          #############
+#########       Last update: 03/2019             #############
 #########                                        #############
 ##############################################################
 
@@ -49,12 +49,14 @@ FINALmat$proportionExplained <- FINALmat$proportionExplained * 2 /FINALmat$var_D
 colnames(FINALmat)
 FINAL_rank_1000 <- FINALmat[FINALmat$sample_size==1000, c(1:11, 21, 31:32)]
 
+#when theta_pre is not included in the population model: i.e., rho_preD = 0
+index_rhopre <- FINAL_rank_1000$rho_preD == 0
 #test length 
 #round(colMeans(FINAL_rank_1000[FINAL_rank_1000$num_items==10,]), digits = 2)  #cann't use it the distribution is highly skewed.But I keep it here.
-round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==10,], MARGIN = 2, median), digits = 2)
+round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==10 & index_rhopre,], MARGIN = 2, median), digits = 2)
 
 #round(colMeans(FINAL_rank_1000[FINAL_rank_1000$num_items==20,]), digits = 2)
-round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==20,], MARGIN = 2, median), digits = 2)
+round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==20 & index_rhopre, ], MARGIN = 2, median), digits = 2)
 
 #round(colMeans(FINAL_rank_1000[FINAL_rank_1000$num_items==40,]), digits = 2)
 round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==40,], MARGIN = 2, median), digits = 2)
