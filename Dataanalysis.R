@@ -104,16 +104,16 @@ FINAL_rank_forplot$sample_size <- as.factor(FINAL_rank_forplot$sample_size)
 p <- ggplot(FINAL_rank_forplot, aes(x=FINAL_rank_forplot$sample_size, y=FINAL_rank_forplot$rank_cor_ZvecT)) + 
   geom_boxplot(fill='#A4A4A4', color="black")+
   theme(text = element_text(size=20),axis.text.x = element_text(angle=90, hjust=1), axis.line = element_line(colour = "black")) +
-  labs(x ="N", y = "Rank Correlation") +
+  labs(title="(b) T Scores for Change method", x ="N", y = "Rank Correlation") +
   ylim(0,1) ; 
 p 
-# Rank correlation r_zd  (not included in the article, because it is very similar to the plot for r_zt above)
+# Rank correlation r_zd 
 FINAL_rank_forplot <- FINALmat[, c(1:6, 31)]
 FINAL_rank_forplot$sample_size <- as.factor(FINAL_rank_forplot$sample_size)
 p <- ggplot(FINAL_rank_forplot, aes(x=FINAL_rank_forplot$sample_size, y=FINAL_rank_forplot$rank_cor_ZvecregNoXpre)) + 
-  geom_boxplot( color="black")+
+  geom_boxplot(fill='#A4A4A4', color="black")+
   theme(text = element_text(size=20),axis.text.x = element_text(angle=90, hjust=1), axis.line = element_line(colour = "black")) +
-  labs(x ="N", y = "Rank Correlation") +
+  labs(title="(a) Regression-based change approach", x ="N", y = "Rank Correlation") +
   ylim(0,1) ; 
 p 
 
