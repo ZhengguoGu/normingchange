@@ -49,51 +49,33 @@ FINALmat$proportionExplained <- FINALmat$proportionExplained * 2 /FINALmat$var_D
 colnames(FINALmat)
 FINAL_rank_1000 <- FINALmat[FINALmat$sample_size==1000, c(1:11, 21, 31:32)]
 
-#when theta_pre is not included in the population model: i.e., rho_preD = 0####
-index_rhopre <- FINAL_rank_1000$rho_preD == 0
 #test length 
-row1 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==10 & index_rhopre,], MARGIN = 2, median), digits = 2)
-row2 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==20 & index_rhopre, ], MARGIN = 2, median), digits = 2)
-row3 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==40 & index_rhopre,], MARGIN = 2, median), digits = 2)
+row1 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==10,], MARGIN = 2, median), digits = 2)
+row2 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==20, ], MARGIN = 2, median), digits = 2)
+row3 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==40,], MARGIN = 2, median), digits = 2)
 
 # #item scores
-row4 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$polytomous==0 & index_rhopre,], MARGIN = 2, median), digits = 2)
-row5 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$polytomous==1 & index_rhopre,], MARGIN = 2, median), digits = 2)
+row4 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$polytomous==0,], MARGIN = 2, median), digits = 2)
+row5 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$polytomous==1,], MARGIN = 2, median), digits = 2)
 
 #effect size of covariates
-row6 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .065 & index_rhopre,], MARGIN = 2, median), digits = 2)
-row7 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .13 & index_rhopre,], MARGIN = 2, median), digits = 2)
-row8 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .26 & index_rhopre,], MARGIN = 2, median), digits = 2)
+row6 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .065,], MARGIN = 2, median), digits = 2)
+row7 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .13 ,], MARGIN = 2, median), digits = 2)
+row8 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .26 ,], MARGIN = 2, median), digits = 2)
+
+#Population correlation between theta_pre and theta_D
+row9 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$rho_preD ==0 ,], MARGIN = 2, median), digits = 2)
+row10 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$rho_preD == -0.1 ,], MARGIN = 2, median), digits = 2)
+row11 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$rho_preD == 0.1 ,], MARGIN = 2, median), digits = 2)
 
 #Variance of theta-change
-row9 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$var_D ==.14 & index_rhopre,], MARGIN = 2, median), digits = 2)
-row10 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$var_D ==1.14 & index_rhopre,], MARGIN = 2, median), digits = 2)
+row12 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$var_D ==.14 ,], MARGIN = 2, median), digits = 2)
+row13 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$var_D ==1.14 ,], MARGIN = 2, median), digits = 2)
 
 table1 <- rbind(row1, row2, row3, row4, row5,
-                row6, row7, row8, row9, row10)
+                row6, row7, row8, row9, row10,
+                row11, row12, row13)
 
-#when theta_pre is not included in the population model: i.e., rho_preD != 0####
-index_rhopre <- FINAL_rank_1000$rho_preD != 0
-#test length 
-row1 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==10 & index_rhopre,], MARGIN = 2, median), digits = 2)
-row2 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==20 & index_rhopre, ], MARGIN = 2, median), digits = 2)
-row3 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==40 & index_rhopre,], MARGIN = 2, median), digits = 2)
-
-# #item scores
-row4 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$polytomous==0 & index_rhopre,], MARGIN = 2, median), digits = 2)
-row5 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$polytomous==1 & index_rhopre,], MARGIN = 2, median), digits = 2)
-
-#effect size of covariates
-row6 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .065 & index_rhopre,], MARGIN = 2, median), digits = 2)
-row7 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .13 & index_rhopre,], MARGIN = 2, median), digits = 2)
-row8 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .26 & index_rhopre,], MARGIN = 2, median), digits = 2)
-
-#Variance of theta-change
-row9 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$var_D ==.14 & index_rhopre,], MARGIN = 2, median), digits = 2)
-row10 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$var_D ==1.14 & index_rhopre,], MARGIN = 2, median), digits = 2)
-
-table2 <- rbind(row1, row2, row3, row4, row5,
-                row6, row7, row8, row9, row10)
 
 
 
@@ -600,3 +582,54 @@ p <- ggplot(FINAL_IPR, aes(x=FINAL_IPR$sample_size, y=FINAL_IPR$`qZ_noXpre99%`))
   labs(title="99th percentile",
        x ="N", y = "IPR")+
   ylim(0,1); p
+
+
+############ Note used. Table: Rank correlations, using N=1000 as an example (rho_preD=0 and !=0) ####################
+colnames(FINALmat)
+FINAL_rank_1000 <- FINALmat[FINALmat$sample_size==1000, c(1:11, 21, 31:32)]
+
+#when theta_pre is not included in the population model: i.e., rho_preD = 0####
+index_rhopre <- FINAL_rank_1000$rho_preD == 0
+#test length 
+row1 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==10 & index_rhopre,], MARGIN = 2, median), digits = 2)
+row2 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==20 & index_rhopre, ], MARGIN = 2, median), digits = 2)
+row3 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==40 & index_rhopre,], MARGIN = 2, median), digits = 2)
+
+# #item scores
+row4 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$polytomous==0 & index_rhopre,], MARGIN = 2, median), digits = 2)
+row5 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$polytomous==1 & index_rhopre,], MARGIN = 2, median), digits = 2)
+
+#effect size of covariates
+row6 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .065 & index_rhopre,], MARGIN = 2, median), digits = 2)
+row7 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .13 & index_rhopre,], MARGIN = 2, median), digits = 2)
+row8 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .26 & index_rhopre,], MARGIN = 2, median), digits = 2)
+
+#Variance of theta-change
+row9 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$var_D ==.14 & index_rhopre,], MARGIN = 2, median), digits = 2)
+row10 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$var_D ==1.14 & index_rhopre,], MARGIN = 2, median), digits = 2)
+
+table1 <- rbind(row1, row2, row3, row4, row5,
+                row6, row7, row8, row9, row10)
+
+#when theta_pre is not included in the population model: i.e., rho_preD != 0####
+index_rhopre <- FINAL_rank_1000$rho_preD != 0
+#test length 
+row1 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==10 & index_rhopre,], MARGIN = 2, median), digits = 2)
+row2 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==20 & index_rhopre, ], MARGIN = 2, median), digits = 2)
+row3 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$num_items==40 & index_rhopre,], MARGIN = 2, median), digits = 2)
+
+# #item scores
+row4 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$polytomous==0 & index_rhopre,], MARGIN = 2, median), digits = 2)
+row5 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$polytomous==1 & index_rhopre,], MARGIN = 2, median), digits = 2)
+
+#effect size of covariates
+row6 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .065 & index_rhopre,], MARGIN = 2, median), digits = 2)
+row7 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .13 & index_rhopre,], MARGIN = 2, median), digits = 2)
+row8 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$proportionExplained == .26 & index_rhopre,], MARGIN = 2, median), digits = 2)
+
+#Variance of theta-change
+row9 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$var_D ==.14 & index_rhopre,], MARGIN = 2, median), digits = 2)
+row10 <- round(apply(FINAL_rank_1000[FINAL_rank_1000$var_D ==1.14 & index_rhopre,], MARGIN = 2, median), digits = 2)
+
+table2 <- rbind(row1, row2, row3, row4, row5,
+                row6, row7, row8, row9, row10)
