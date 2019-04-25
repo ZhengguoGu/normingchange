@@ -1,7 +1,7 @@
 ###################################################
 ####### simulation: Norming change scores #########
 #######                                   #########
-#######       Last update: 12/02/2019     #########
+#######       Last update: 25/04/2019     #########
 ###################################################
 
 library(foreach)
@@ -20,10 +20,10 @@ tmp=proc.time()
 
 set.seed(1) # set seed
 sample_sizeV = seq(100, 1500, by = 100)  #sample size 
-beta_pre <- rho_preD*sqrt(var_D)    #see Equation (19) in the article
+beta_pre <- rho_preD*sqrt(var_D)    #see Equation (15) in the article
 propEV <- c((.065-rho_preD^2)*var_D/2, (.13-rho_preD^2)*var_D/2, (.26-rho_preD^2)*var_D/2)  # proportion of explained by each X1 and X2 (excluding theta_pre).
                                                                                             # R^2=.065: small effect; = .13: medium effect; =.26: large effect.
-                                                                                            # check Appendix C and Equation (19)
+                                                                                            # check Appendix C
 polytomousV <- c(1, 0)  # if 1, simulate polytomous response data 
 num_itemsV <- c(10, 20, 40) 
 
@@ -144,16 +144,7 @@ while(num_test <= nrow(df)){
   vector_of_Z <- rnorm(sample_size, .75, sqrt(var_Z))  #need to record this
   theta_D <- beta1 * X1 + beta2 * X2 + beta_pre * theta_pre + vector_of_Z # notice that beta_0 = .75 is included when we generate Z
   theta_post <- theta_pre + theta_D
-  
-  
-  #var(theta_D)
-  # 1.3. extra: check whether our setup is correct
-  #beta1^2*var(X1)+beta2^2*var(X2) + beta_pre^2 + var_Z #total variance, should be close to var_D
-  #var_D
-  #fit <- lm(theta_D ~ X1 + X2 + theta_pre)
-  #summary(fit)
-  #library(lmSupport)
-  #modelEffectSizes(fit)
+
   
   cl <- makeCluster(12)
   registerDoSNOW(cl)
