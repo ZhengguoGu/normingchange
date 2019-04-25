@@ -1,7 +1,7 @@
 library(lmSupport)
 
 var_D <- 0.14 # .14 or 1.14   #variance of change 
-rho_preD <- 0 # 0, .1, -.1    #correlation between theta_pre and theta_D
+rho_preD <- 0.1 # 0, .1, -.1    #correlation between theta_pre and theta_D
 
 sample_sizeV = seq(100, 1500, by = 100)  #sample size 
 beta_pre <- rho_preD*sqrt(var_D)    #see Equation (19) in the article
