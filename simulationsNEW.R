@@ -1,7 +1,7 @@
 ###################################################
 ####### simulation: Norming change scores #########
 #######                                   #########
-#######       Last update: 25/04/2019     #########
+#######       Last update: 01/05/2019     #########
 ###################################################
 
 library(foreach)
@@ -123,34 +123,34 @@ while(num_test <= nrow(df)){
   beta1 <- sqrt(propE / .25)  # For X1, dichotomous; see Appendix C
   beta2 <- sqrt(propE * 12 / (12 - 4)^2)    # For X2. continuous, uniform; see Appendix C
   
-  # 1. simulate person parameters
-  
-  # 1.1. covariates X1 and X2
-  X1 <- rbinom(sample_size, size = 1, prob = .5)
-  X2 <- runif(sample_size, min = 4, max = 12)
-  
-  # 1.2. expectation of theta_pretest, given X1 and X2, and theta_pre
-  
-  theta_pre <- rnorm(sample_size, 0, 1)
-  
-  if(propE== (.065-rho_preD^2)*var_D/2){   #propEV <- c((.065-rho_preD^2)*var_D/2, (.13-rho_preD^2)*var_D/2, (.26-rho_preD^2)*var_D/2)
-    var_Z <- var_D * (1 - 0.065)
-  }else if(propE == (.13-rho_preD^2)*var_D/2){
-    var_Z <- var_D * (1 - 0.13)
-  }else if (propE == (.26-rho_preD^2)*var_D/2){
-    var_Z <- var_D * (1 - 0.26)
-  }
-  
-  vector_of_Z <- rnorm(sample_size, .75, sqrt(var_Z))  #need to record this
-  theta_D <- beta1 * X1 + beta2 * X2 + beta_pre * theta_pre + vector_of_Z # notice that beta_0 = .75 is included when we generate Z
-  theta_post <- theta_pre + theta_D
-
   
   cl <- makeCluster(12)
   registerDoSNOW(cl)
 
   #note that set.seed() and %dorng% ensure that parallel computing generates reproducable results.
   sim_result <- foreach(i = 1:1000, .combine='rbind') %dorng% {
+    
+    # 1. simulate person parameters
+    
+    # 1.1. covariates X1 and X2
+    X1 <- rbinom(sample_size, size = 1, prob = .5)
+    X2 <- runif(sample_size, min = 4, max = 12)
+    
+    # 1.2. expectation of theta_pretest, given X1 and X2, and theta_pre
+    
+    theta_pre <- rnorm(sample_size, 0, 1)
+    
+    if(propE== (.065-rho_preD^2)*var_D/2){   #propEV <- c((.065-rho_preD^2)*var_D/2, (.13-rho_preD^2)*var_D/2, (.26-rho_preD^2)*var_D/2)
+      var_Z <- var_D * (1 - 0.065)
+    }else if(propE == (.13-rho_preD^2)*var_D/2){
+      var_Z <- var_D * (1 - 0.13)
+    }else if (propE == (.26-rho_preD^2)*var_D/2){
+      var_Z <- var_D * (1 - 0.26)
+    }
+    
+    vector_of_Z <- rnorm(sample_size, .75, sqrt(var_Z))  #need to record this
+    theta_D <- beta1 * X1 + beta2 * X2 + beta_pre * theta_pre + vector_of_Z # notice that beta_0 = .75 is included when we generate Z
+    theta_post <- theta_pre + theta_D
     
     ###################### Simulate response data #######################
     
