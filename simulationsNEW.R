@@ -11,8 +11,8 @@ library(doRNG)
 library(Kendall)
 
 #########NEW Parameters that need to be adjusted manually (for 1st revision at Assessment) ################
-var_D <- 1.14 # .14 or 1.14   #variance of change 
-rho_preD <- -0.1 # 0, .1, -.1    #correlation between theta_pre and theta_D
+var_D <- 0.14 # .14 or 1.14   #variance of change 
+rho_preD <- 0 # 0, .1, -.1    #correlation between theta_pre and theta_D
 #######################################################################################################
 
 tmp=proc.time()
