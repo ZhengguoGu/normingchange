@@ -11,8 +11,8 @@ library(doRNG)
 library(Kendall)
 
 #########NEW Parameters that need to be adjusted manually (for 1st revision at Assessment) ################
-var_D <- 1.14 # .14 or 1.14   #variance of change 
-rho_preD <- 0.1 # 0, .1, -.1    #correlation between theta_pre and theta_D
+var_D <- 0.14 # .14 or 1.14   #variance of change 
+rho_preD <- 0 # 0, .1, -.1    #correlation between theta_pre and theta_D
 #######################################################################################################
 
 tmp=proc.time()
@@ -124,7 +124,7 @@ while(num_test <= nrow(df)){
   beta2 <- sqrt(propE * 12 / (12 - 4)^2)    # For X2. continuous, uniform; see Appendix C
   
   
-  cl <- makeCluster(4)
+  cl <- makeCluster(12)
   registerDoSNOW(cl)
 
   #note that set.seed() and %dorng% ensure that parallel computing generates reproducable results.
